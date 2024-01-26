@@ -1,0 +1,22 @@
+.oauth-login-btn-container {
+  position: relative;
+}
+.oauth-login-btn {
+  width: 520px;
+  height: 58px;
+  object-fit: cover;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.oauth-login-text {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+  font-size: 25px;
+  color: #2c2e3a;
+  font-family: "SUIT-ExtraBold";
+  cursor: pointer;
+  text-align: center;
+}
