@@ -3,16 +3,16 @@ import { create } from "zustand";
 interface AddSongsModalState {
   originalLink: string;
   youtubeId: string;
-  startTime: number | null;
-  endTime: number | null;
+  startTime: string;
+  endTime: string;
   songTitle: string;
   artistName: string;
   genre: string;
   answer: string;
   setOriginalLink: (originalLink: string) => void;
   setYoutubeId: (youtubeLink: string) => void;
-  setStartTime: (startTime: number | null) => void;
-  setEndTime: (endTime: number | null) => void;
+  setStartTime: (startTime: string) => void;
+  setEndTime: (endTime: string) => void;
   setSongTitle: (songTitle: string) => void;
   setArtistName: (artistName: string) => void;
   setGenre: (genre: string) => void;
@@ -21,8 +21,8 @@ interface AddSongsModalState {
   songsInfo: Array<{
     originalLink: string;
     youtubeId: string;
-    startTime: number | null;
-    endTime: number | null;
+    startTime: string;
+    endTime: string;
     songTitle: string;
     artistName: string;
     genre: string;
@@ -31,8 +31,8 @@ interface AddSongsModalState {
   setSongsInfo: (songsInfo: {
     originalLink: string;
     youtubeId: string;
-    startTime: number | null;
-    endTime: number | null;
+    startTime: string;
+    endTime: string;
     songTitle: string;
     artistName: string;
     genre: string;
@@ -43,8 +43,8 @@ interface AddSongsModalState {
 export const useAddSongsModalStore = create<AddSongsModalState>((set) => ({
   originalLink: "",
   youtubeId: "",
-  startTime: null,
-  endTime: null,
+  startTime: "00:00:00",
+  endTime: "00:00:00",
   songTitle: "",
   artistName: "",
   genre: "",

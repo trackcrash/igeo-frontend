@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Flex,
   Box,
@@ -8,8 +8,6 @@ import {
   RadioGroup,
   Textarea,
   Text,
-  NumberInput,
-  NumberInputField,
   RangeSlider,
   RangeSliderTrack,
   RangeSliderFilledTrack,
@@ -17,6 +15,8 @@ import {
 } from "@chakra-ui/react";
 import { useAddSongsModalStore } from "../store/AddSongsModalStore";
 import YouTubePlayer from "react-youtube";
+import axios from "axios";
+import { FaLongArrowAltRight } from "react-icons/fa";
 
 import "../css/AddSongsModal.css";
 
@@ -29,7 +29,7 @@ interface VideoDetails {
 }
 
 const AddSongsModal: React.FC = () => {
-  const [defaultValue, setDefaultValue] = useState<[number, number]>([0, 0]);
+  const [parsedDuration, setParsedDuration] = useState<string>("");
   const {
     originalLink,
     youtubeId,
@@ -51,11 +51,28 @@ const AddSongsModal: React.FC = () => {
   } = useAddSongsModalStore();
 
   const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStartTime(Number(e.target.value));
+    setStartTime(e.target.value);
   };
 
   const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEndTime(Number(e.target.value));
+    setEndTime(e.target.value);
+  };
+
+  const handleTimeCheckRegex = (isStartTime: boolean) => {
+    const regex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+    if (isStartTime) {
+      if (!regex.test(startTime)) {
+        setStartTime("00:00:00");
+      }
+    } else {
+      if (!regex.test(endTime)) {
+        if (originalLink) {
+          setEndTime(parsedDuration);
+        } else {
+          setEndTime("00:00:00");
+        }
+      }
+    }
   };
 
   const handleSongTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,24 +91,57 @@ const AddSongsModal: React.FC = () => {
     setAnswer(e.target.value);
   };
 
-  const parseYoutubeVideoId = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const parseYoutubeVideoId = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const enteredValue: string = e.target.value;
     const extractedId = /(?:watch\?v=|youtu\.be\/)([^&]+)/;
     const match = enteredValue.match(extractedId);
     if (match && match[1]) {
       const extractedValue = match[1];
       setYoutubeId(extractedValue);
+      try {
+        const apiKey = process.env.REACT_APP_YOUTUBE_API;
+        const response = await axios.get(`https://www.googleapis.com/youtube/v3/videos?id=${extractedValue}&part=contentDetails&key=${apiKey}`);
+        const videoDetails: VideoDetails = response.data;
+        if (videoDetails.items.length > 0) {
+          const duration = videoDetails.items[0].contentDetails.duration;
+          console.log("Youtube 영상 길이:", duration);
+          const parsed = parseDuration(duration);
+          console.log("parsing된 영상 길이:", parsed);
+          setParsedDuration(parsed);
+          setEndTime(parsed);
+        }
+      } catch (error) {
+        console.error("Youtube 영상 세부 정보를 가져오는 중 오류 발생:", error);
+      }
     } else {
       setYoutubeId(enteredValue);
     }
     setOriginalLink(enteredValue);
   };
 
+  const parseDuration = (duration: string): string => {
+    const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+    const hours = match && match[1] ? parseInt(match[1], 10) : 0;
+    const minutes = match && match[2] ? parseInt(match[2], 10) : 0;
+    const seconds = match && match[3] ? parseInt(match[3], 10) : 0;
+    const formattedHours = hours < 10 ? `0${hours}` : `${hours}`;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    const formattedTime = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+    return formattedTime;
+  };
+
+  const parseTimeToSeconds = (timeString: string) => {
+    const [hours, minutes, seconds] = timeString.split(":").map(Number);
+    const parsedSecond = hours * 3600 + minutes * 60 + seconds;
+    return parsedSecond;
+  };
+
   const clearInputFields = () => {
     setOriginalLink("");
     setYoutubeId("");
-    setStartTime(null);
-    setEndTime(null);
+    setStartTime("");
+    setEndTime("");
     setSongTitle("");
     setArtistName("");
     setGenre("");
@@ -109,32 +159,12 @@ const AddSongsModal: React.FC = () => {
       disablekb: 1,
       autoplay: 1,
       rel: 1,
-      start: startTime,
-      end: endTime,
+      start: parseTimeToSeconds(startTime),
+      end: parseTimeToSeconds(endTime),
     },
     width: "inherit",
-    height: "inherit",
+    height: "11.25em",
   };
-
-  const fetchVideoLength = async () => {
-    try {
-      const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?id=${youtubeId}&part=contentDetails&key=YOUTUBE_API_KEY`);
-      const data: VideoDetails = await response.json();
-      const duration = data.items[0].contentDetails.duration;
-      const videoLengthInSeconds = duration.includes("M")
-        ? duration.split("M").reduce((acc, val) => acc + parseInt(val.split("S")[0]) * 60, 0)
-        : parseInt(duration.split("S")[0]);
-      setDefaultValue([0, videoLengthInSeconds]);
-    } catch (error) {
-      console.error("Error fetching video length:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (youtubeId) {
-      fetchVideoLength();
-    }
-  }, [youtubeId]);
 
   return (
     <Flex direction="column" align="center">
@@ -152,8 +182,10 @@ const AddSongsModal: React.FC = () => {
                   alignContent: "center",
                   backgroundColor: "black",
                 }}
+                width="inherit"
+                height="11.25em"
               >
-                <Text fontSize={25} fontWeight={"bold"}>
+                <Text fontSize={20} fontWeight={"bold"}>
                   링크를 추가해주세요
                 </Text>
               </Box>
@@ -164,27 +196,38 @@ const AddSongsModal: React.FC = () => {
           </Box>
         </Flex>
         <Flex flex={1} flexDir={"column"}>
-          <RangeSlider m={"10px"} aria-label={["min", "max"]} defaultValue={[0, 999]}>
+          <RangeSlider m={"10px 0"} aria-label={["min", "max"]} isDisabled={!youtubeId}>
             <RangeSliderTrack>
               <RangeSliderFilledTrack />
             </RangeSliderTrack>
             <RangeSliderThumb index={0} />
             <RangeSliderThumb index={1} />
           </RangeSlider>
-          <NumberInput>
-            {startTime ? (
-              <NumberInputField value={startTime} onChange={handleStartTimeChange} />
-            ) : (
-              <NumberInputField placeholder="시작 시간(초)" value={undefined} onChange={handleStartTimeChange} />
-            )}
-          </NumberInput>
-          <NumberInput>
-            {endTime ? (
-              <NumberInputField value={endTime} onChange={handleEndTimeChange} />
-            ) : (
-              <NumberInputField placeholder="끝 시간(초)" value={undefined} onChange={handleEndTimeChange} />
-            )}
-          </NumberInput>
+          <Flex h={"40px"}>
+            <Input
+              className="song-playtime-picker"
+              placeholder="시작 시간"
+              value={startTime}
+              onChange={handleStartTimeChange}
+              onBlur={() => handleTimeCheckRegex(true)}
+            />
+            <FaLongArrowAltRight
+              style={{
+                flex: "1",
+                height: "auto",
+                padding: "12px 5px",
+                background: "rgb(255, 250, 235)",
+                color: "black",
+              }}
+            />
+            <Input
+              className="song-playtime-picker"
+              placeholder="끝 시간"
+              value={endTime}
+              onChange={handleEndTimeChange}
+              onBlur={() => handleTimeCheckRegex(false)}
+            />
+          </Flex>
         </Flex>
       </Flex>
       <Box mb={4}>

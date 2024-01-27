@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ChakraProvider, theme } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { UserLayout } from "./Layout";
 import { AuthProvider } from "./layout/header/AuthConText";
@@ -9,6 +9,16 @@ import LoginPage from "./page/user/LoginPage";
 import WithDrawerPage from "./page/user/withdrawal/WithdrawalPage";
 import Exit from "./page/user/withdrawal/WithdrawalComplete";
 import MusicMapRegisterPage from "./map/musicMap/MusicMapRegisterPage";
+
+const theme = extendTheme({
+  components: {
+    Text: {
+      baseStyle: {
+        textAlign: "center"
+      },
+    },
+  },
+});
 
 export const App = () => (
   <AuthProvider>

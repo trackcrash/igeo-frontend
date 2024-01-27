@@ -7,3 +7,15 @@
   width: 100%;
   height: 100%;
 }
+.song-playtime-picker {
+  flex: 4 !important;
+  text-align: center;
+  border: none !important;
+  border-radius: 0 !important;
+  color: black !important;
+  background: rgb(255, 250, 235) !important;
+  --input-padding: 10px !important;
+}
+.song-playtime-picker::placeholder {
+  color: #999;
+}
