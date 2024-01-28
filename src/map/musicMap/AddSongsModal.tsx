@@ -226,7 +226,17 @@ const AddSongsModal: React.FC = () => {
           </Box>
         </Flex>
         <Flex flex={1} flexDir={"column"}>
-          <RangeSlider m={"10px 0"} aria-label={["min", "max"]} isDisabled={!youtubeId}>
+          <RangeSlider
+            m={"10px 0"}
+            aria-label={["min", "max"]}
+            defaultValue={[parseTimeToSeconds(startTime), parseTimeToSeconds(endTime) - 1]}
+            max={parseTimeToSeconds(parsedDuration)}
+            onChange={(val: number[]) => {
+              setStartTime(parseCurrentTime(val[0]));
+              setEndTime(parseCurrentTime(val[1]));
+            }}
+            isDisabled={!youtubeId}
+          >
             <RangeSliderTrack>
               <RangeSliderFilledTrack />
             </RangeSliderTrack>
