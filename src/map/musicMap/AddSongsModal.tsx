@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Flex,
   Box,
@@ -14,7 +14,7 @@ import {
   RangeSliderThumb,
 } from "@chakra-ui/react";
 import { useAddSongsModalStore } from "../store/AddSongsModalStore";
-import YouTubePlayer from "react-youtube";
+import YouTube from "react-youtube";
 import axios from "axios";
 import { FaLongArrowAltRight } from "react-icons/fa";
 
@@ -28,8 +28,11 @@ interface VideoDetails {
   }>;
 }
 
+const timeOptions: number[] = [1, 5, 10, 30];
+
 const AddSongsModal: React.FC = () => {
   const [parsedDuration, setParsedDuration] = useState<string>("");
+  const playerRef = useRef<YT.Player | null>(null);
   const {
     originalLink,
     youtubeId,
@@ -119,16 +122,19 @@ const AddSongsModal: React.FC = () => {
     setOriginalLink(enteredValue);
   };
 
+  const padWithZero = (value: number): string => (value < 10 ? `0${value}` : `${value}`);
+
   const parseDuration = (duration: string): string => {
-    const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-    const hours = match && match[1] ? parseInt(match[1], 10) : 0;
-    const minutes = match && match[2] ? parseInt(match[2], 10) : 0;
-    const seconds = match && match[3] ? parseInt(match[3], 10) : 0;
-    const formattedHours = hours < 10 ? `0${hours}` : `${hours}`;
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-    const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-    const formattedTime = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-    return formattedTime;
+    const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/) || [];
+    const [_, hours, minutes, seconds] = match.map((part) => (part ? parseInt(part, 10) : 0));
+    return `${padWithZero(hours)}:${padWithZero(minutes)}:${padWithZero(seconds)}`;
+  };
+
+  const parseCurrentTime = (currentTime: number): string => {
+    const hours = Math.floor(currentTime / 3600);
+    const minutes = Math.floor((currentTime % 3600) / 60);
+    const remainingSeconds = Math.floor(currentTime % 60);
+    return `${padWithZero(hours)}:${padWithZero(minutes)}:${padWithZero(remainingSeconds)}`;
   };
 
   const parseTimeToSeconds = (timeString: string) => {
@@ -166,13 +172,37 @@ const AddSongsModal: React.FC = () => {
     height: "11.25em",
   };
 
+  const handleReady = (e: any) => {
+    playerRef.current = e.target;
+  };
+
+  const handleCurrendTime = (isStartTime: boolean) => {
+    if (playerRef.current) {
+      const currentTime = playerRef.current.getCurrentTime();
+      console.log(`현재 재생 시간: ${currentTime}초`);
+      if (isStartTime) {
+        setStartTime(parseCurrentTime(currentTime));
+      } else {
+        setEndTime(parseCurrentTime(currentTime));
+      }
+    }
+  };
+
+  const handlePlayTime = (seconds: number) => {
+    if (playerRef.current) {
+      const currentTime = playerRef.current.getCurrentTime();
+      setStartTime(parseCurrentTime(currentTime));
+      setEndTime(parseCurrentTime(currentTime + seconds));
+    }
+  };
+
   return (
     <Flex direction="column" align="center">
       <Flex direction="row" gap={"30px"}>
         <Flex flex={1} direction="column">
           <Box className="player-wrapper" mb={4}>
             {youtubeId ? (
-              <YouTubePlayer iframeClassName="react-player" videoId={youtubeId} opts={opts} />
+              <YouTube iframeClassName="react-player" videoId={youtubeId} opts={opts} onReady={handleReady} />
             ) : (
               <Box
                 style={{
@@ -203,7 +233,7 @@ const AddSongsModal: React.FC = () => {
             <RangeSliderThumb index={0} />
             <RangeSliderThumb index={1} />
           </RangeSlider>
-          <Flex h={"40px"}>
+          <Flex h={"40px"} mb={4}>
             <Input
               className="song-playtime-picker"
               placeholder="시작 시간"
@@ -227,6 +257,17 @@ const AddSongsModal: React.FC = () => {
               onChange={handleEndTimeChange}
               onBlur={() => handleTimeCheckRegex(false)}
             />
+          </Flex>
+          <Flex justifyContent={"center"} mb={4} gap={6}>
+            <Button onClick={() => handleCurrendTime(true)}>여기부터 재생</Button>
+            <Button onClick={() => handleCurrendTime(false)}>여기까지 재생</Button>
+          </Flex>
+          <Flex justifyContent={"center"} mb={4} gap={4}>
+            {timeOptions.map((seconds: number) => (
+              <Button key={seconds} onClick={() => handlePlayTime(seconds)}>
+                {`${seconds}초`}
+              </Button>
+            ))}
           </Flex>
         </Flex>
       </Flex>
