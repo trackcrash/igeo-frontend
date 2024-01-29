@@ -227,9 +227,9 @@ const AddSongsModal: React.FC = () => {
         </Flex>
         <Flex flex={1} flexDir={"column"}>
           <RangeSlider
+            key={`${parseTimeToSeconds(startTime)}-${parseTimeToSeconds(endTime)}`}
             m={"10px 0"}
-            aria-label={["min", "max"]}
-            defaultValue={[parseTimeToSeconds(startTime), parseTimeToSeconds(endTime) - 1]}
+            defaultValue={[parseTimeToSeconds(startTime), parseTimeToSeconds(endTime)]}
             max={parseTimeToSeconds(parsedDuration)}
             onChange={(val: number[]) => {
               setStartTime(parseCurrentTime(val[0]));
