@@ -32,6 +32,7 @@ const timeOptions: number[] = [1, 5, 10, 30];
 
 const AddSongsModal: React.FC = () => {
   const [parsedDuration, setParsedDuration] = useState<string>("");
+  const [duration, setDuration] = useState<number>(0);
   const playerRef = useRef<YT.Player | null>(null);
   const {
     originalLink,
@@ -52,6 +53,8 @@ const AddSongsModal: React.FC = () => {
     setAnswer,
     setSongsInfo,
   } = useAddSongsModalStore();
+  const generateSliderKey = `${startTime}-${endTime}`;
+  const [sliderKey, setSliderKey] = useState<string>(generateSliderKey);
 
   const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartTime(e.target.value);
@@ -172,8 +175,11 @@ const AddSongsModal: React.FC = () => {
     height: "11.25em",
   };
 
-  const handleReady = (e: any) => {
-    playerRef.current = e.target;
+  const handleReady = (event: any) => {
+    playerRef.current = event.target;
+    const duration = event.target.getDuration();
+    setDuration(duration);
+    setSliderKey(generateSliderKey);
   };
 
   const handleCurrendTime = (isStartTime: boolean) => {
@@ -185,6 +191,7 @@ const AddSongsModal: React.FC = () => {
       } else {
         setEndTime(parseCurrentTime(currentTime));
       }
+      setSliderKey(generateSliderKey);
     }
   };
 
@@ -193,6 +200,7 @@ const AddSongsModal: React.FC = () => {
       const currentTime = playerRef.current.getCurrentTime();
       setStartTime(parseCurrentTime(currentTime));
       setEndTime(parseCurrentTime(currentTime + seconds));
+      setSliderKey(generateSliderKey);
     }
   };
 
@@ -227,10 +235,10 @@ const AddSongsModal: React.FC = () => {
         </Flex>
         <Flex flex={1} flexDir={"column"}>
           <RangeSlider
-            key={`${parseTimeToSeconds(startTime)}-${parseTimeToSeconds(endTime)}`}
+            key={sliderKey}
             m={"10px 0"}
             defaultValue={[parseTimeToSeconds(startTime), parseTimeToSeconds(endTime)]}
-            max={parseTimeToSeconds(parsedDuration)}
+            max={duration}
             onChange={(val: number[]) => {
               setStartTime(parseCurrentTime(val[0]));
               setEndTime(parseCurrentTime(val[1]));
