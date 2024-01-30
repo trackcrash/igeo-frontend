@@ -19,3 +19,7 @@
 .song-playtime-picker::placeholder {
   color: #999;
 }
+
+.chakra-input::placeholder {
+  color: rgb(170, 170, 170);
+}
