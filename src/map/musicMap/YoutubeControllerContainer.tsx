@@ -3,32 +3,20 @@ import { Box, Button, Flex, Input, RangeSlider, RangeSliderFilledTrack, RangeSli
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { useAddSongsModalStore } from "../store/AddSongsModalStore";
 import YouTube from "react-youtube";
-import axios from "axios";
-
-interface VideoDetails {
-  items: Array<{
-    contentDetails: {
-      duration: string;
-    };
-  }>;
-}
 
 const timeOptions: number[] = [1, 5, 10, 30];
 
 const YoutubeControllerContainer: React.FC = () => {
-  const { originalLink, youtubeId, startTime, endTime, setOriginalLink, setYoutubeId, setStartTime, setEndTime } = useAddSongsModalStore();
-  const generateSliderKey = `${startTime}-${endTime}`;
+  const { youtubeId, startTime, endTime, setYoutubeId, setStartTime, setEndTime } = useAddSongsModalStore();
+  const generateSliderKey = () => `${startTime}-${endTime}`;
   const [sliderKey, setSliderKey] = useState<string>(generateSliderKey);
-  const [parsedDuration, setParsedDuration] = useState<string>("");
+  const [originalLink, setOriginalLink] = useState<string>("");
   const [duration, setDuration] = useState<number>(0);
   const playerRef = useRef<YT.Player | null>(null);
 
-  const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStartTime(e.target.value);
-  };
-
-  const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEndTime(e.target.value);
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>, isStartTime: boolean) => {
+    const value = e.target.value;
+    isStartTime ? setStartTime(value) : setEndTime(value);
   };
 
   const handleTimeCheckRegex = (isStartTime: boolean) => {
@@ -40,20 +28,13 @@ const YoutubeControllerContainer: React.FC = () => {
     } else {
       if (!regex.test(endTime)) {
         if (originalLink) {
-          setEndTime(parsedDuration);
+          setEndTime(parseCurrentTime(duration));
         } else {
           // duration으로 설정
           setEndTime("00:00:00");
         }
       }
     }
-  };
-
-  const parseDuration = (duration: string): string => {
-    const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/) || [];
-    // eslint-disable-next-line
-    const [_, hours, minutes, seconds] = match.map((part) => (part ? parseInt(part, 10) : 0));
-    return `${padWithZero(hours)}:${padWithZero(minutes)}:${padWithZero(seconds)}`;
   };
 
   const padWithZero = (value: number): string => (value < 10 ? `0${value}` : `${value}`);
@@ -65,25 +46,10 @@ const YoutubeControllerContainer: React.FC = () => {
     if (match && match[1]) {
       const extractedValue = match[1];
       setYoutubeId(extractedValue);
-      try {
-        const apiKey = process.env.REACT_APP_YOUTUBE_API;
-        const response = await axios.get(`https://www.googleapis.com/youtube/v3/videos?id=${extractedValue}&part=contentDetails&key=${apiKey}`);
-        const videoDetails: VideoDetails = response.data;
-        if (videoDetails.items.length > 0) {
-          const duration = videoDetails.items[0].contentDetails.duration;
-          console.log("Youtube 영상 길이:", duration);
-          const parsed = parseDuration(duration);
-          console.log("parsing된 영상 길이:", parsed);
-          setParsedDuration(parsed);
-          setEndTime(parsed);
-        }
-      } catch (error) {
-        console.error("Youtube 영상 세부 정보를 가져오는 중 오류 발생:", error);
-      }
+      setOriginalLink(enteredValue);
     } else {
       setYoutubeId(enteredValue);
     }
-    setOriginalLink(enteredValue);
   };
 
   const parseCurrentTime = (currentTime: number): string => {
@@ -115,7 +81,8 @@ const YoutubeControllerContainer: React.FC = () => {
     playerRef.current = event.target;
     const duration = event.target.getDuration();
     setDuration(duration);
-    setSliderKey(generateSliderKey);
+    setEndTime(parseCurrentTime(duration));
+    setSliderKey(generateSliderKey());
   };
 
   const handleCurrendTime = (isStartTime: boolean) => {
@@ -127,7 +94,7 @@ const YoutubeControllerContainer: React.FC = () => {
       } else {
         setEndTime(parseCurrentTime(currentTime));
       }
-      setSliderKey(generateSliderKey);
+      setSliderKey(generateSliderKey());
     }
   };
 
@@ -136,7 +103,7 @@ const YoutubeControllerContainer: React.FC = () => {
       const currentTime = playerRef.current.getCurrentTime();
       setStartTime(parseCurrentTime(currentTime));
       setEndTime(parseCurrentTime(currentTime + seconds));
-      setSliderKey(generateSliderKey);
+      setSliderKey(generateSliderKey());
     }
   };
 
@@ -191,7 +158,7 @@ const YoutubeControllerContainer: React.FC = () => {
             className="song-playtime-picker"
             placeholder="시작 시간"
             value={startTime}
-            onChange={handleStartTimeChange}
+            onChange={(e) => handleTimeChange(e, true)}
             onBlur={() => handleTimeCheckRegex(true)}
           />
           <FaLongArrowAltRight
@@ -207,7 +174,7 @@ const YoutubeControllerContainer: React.FC = () => {
             className="song-playtime-picker"
             placeholder="끝 시간"
             value={endTime}
-            onChange={handleEndTimeChange}
+            onChange={(e) => handleTimeChange(e, false)}
             onBlur={() => handleTimeCheckRegex(false)}
           />
         </Flex>

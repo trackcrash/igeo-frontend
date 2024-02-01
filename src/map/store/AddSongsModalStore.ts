@@ -1,7 +1,6 @@
 import { create } from "zustand";
 
 interface AddSongsModalState {
-  originalLink: string;
   youtubeId: string;
   startTime: string;
   endTime: string;
@@ -9,7 +8,6 @@ interface AddSongsModalState {
   artistName: string;
   genre: string;
   answers: string[];
-  setOriginalLink: (originalLink: string) => void;
   setYoutubeId: (youtubeLink: string) => void;
   setStartTime: (startTime: string) => void;
   setEndTime: (endTime: string) => void;
@@ -22,7 +20,6 @@ interface AddSongsModalState {
   resetState: () => void;
 
   songsInfo: Array<{
-    originalLink: string;
     youtubeId: string;
     startTime: string;
     endTime: string;
@@ -32,7 +29,6 @@ interface AddSongsModalState {
     answers: string[];
   }>;
   setSongsInfo: (songsInfo: {
-    originalLink: string;
     youtubeId: string;
     startTime: string;
     endTime: string;
@@ -44,7 +40,6 @@ interface AddSongsModalState {
 }
 
 export const useAddSongsModalStore = create<AddSongsModalState>((set) => ({
-  originalLink: "",
   youtubeId: "",
   startTime: "00:00:00",
   endTime: "00:00:00",
@@ -52,7 +47,6 @@ export const useAddSongsModalStore = create<AddSongsModalState>((set) => ({
   artistName: "",
   genre: "",
   answers: [],
-  setOriginalLink: (originalLink) => set({ originalLink }),
   setYoutubeId: (youtubeId) => set({ youtubeId }),
   setStartTime: (startTime) => set({ startTime }),
   setEndTime: (endTime) => set({ endTime }),
@@ -73,7 +67,6 @@ export const useAddSongsModalStore = create<AddSongsModalState>((set) => ({
     })),
   resetState: () =>
     set({
-      originalLink: "",
       youtubeId: "",
       startTime: "00:00:00",
       endTime: "00:00:00",
@@ -85,8 +78,8 @@ export const useAddSongsModalStore = create<AddSongsModalState>((set) => ({
     }),
 
   songsInfo: [],
-  setSongsInfo: (songsInfo) =>
+  setSongsInfo: (songInfo) =>
     set((prev) => ({
-      songsInfo: [...prev.songsInfo, songsInfo],
+      songsInfo: [...prev.songsInfo, songInfo],
     })),
 }));

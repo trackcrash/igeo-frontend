@@ -1,18 +1,50 @@
-import React, { useRef } from "react";
-import { Flex, Button, Divider, useDisclosure, useToast } from "@chakra-ui/react";
+import React, { useEffect, useRef, useState } from "react";
+import { Flex, Button, Divider, useDisclosure, useToast, Text } from "@chakra-ui/react";
 import { useAddSongsModalStore } from "../store/AddSongsModalStore";
 import YoutubeControllerContainer from "./YoutubeControllerContainer";
 import QuestionInfoContainer from "./QuestionInfoContainer";
 import AnswerTagContainer from "./AnswerTagContainer";
 import ResetAlertDialog from "./ResetAlertDialog";
+import { getSongDetail } from "../api/mapApi";
+import { SongInfo } from "../entity/SongInfo";
 
 import "../css/AddSongsModal.css";
 
-const AddSongsModal: React.FC = () => {
+interface AddSongsModalProps {
+  selectedSongId: number | null;
+}
+
+const AddSongsModal: React.FC<AddSongsModalProps> = ({ selectedSongId }) => {
   const toast = useToast();
-  const { originalLink, youtubeId, startTime, endTime, songTitle, artistName, genre, answers, resetState, setSongsInfo } = useAddSongsModalStore();
+  const { youtubeId, startTime, endTime, songTitle, artistName, genre, answers, resetState, setSongsInfo } = useAddSongsModalStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement | null>(null);
+  const [songInfo, setSongInfo] = useState<SongInfo>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchSongDetailData = async () => {
+      if (selectedSongId) {
+        try {
+          const data = await getSongDetail(selectedSongId);
+          setSongInfo(data);
+        } catch (error) {
+          toast({
+            title: "곡 정보 로드 실패",
+            description: "곡 정보를 가져오는 중 오류가 발생했습니다.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      }
+    };
+    if (selectedSongId !== null) {
+      fetchSongDetailData();
+    } else {
+      setIsLoading(true);
+    }
+  }, [selectedSongId]);
 
   const clearInputFields = () => {
     resetState();
@@ -20,7 +52,7 @@ const AddSongsModal: React.FC = () => {
 
   const handleSongsInfoChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setSongsInfo({ originalLink, youtubeId, startTime, endTime, songTitle, artistName, genre, answers });
+    setSongsInfo({ youtubeId, startTime, endTime, songTitle, artistName, genre, answers });
     clearInputFields();
   };
 
@@ -48,23 +80,29 @@ const AddSongsModal: React.FC = () => {
 
   return (
     <Flex direction="column">
-      <YoutubeControllerContainer />
-      <Divider m={"4px 0"} />
-      <QuestionInfoContainer />
-      <Divider m={"4px 0"} />
-      <AnswerTagContainer />
-      <Divider m={"4px 0"} />
-      <Flex m={6} justifyContent={"center"}>
-        <Flex gap={2}>
-          <Button minW={"150px"} colorScheme="green" onClick={handleSongsInfoChange}>
-            등록
-          </Button>
-          <Button minW={"150px"} variant="outline" colorScheme="green" onClick={onOpen}>
-            초기화
-          </Button>
-          <ResetAlertDialog cancelRef={cancelRef} onClose={onClose} isOpen={isOpen} onReset={handleReset} />
-        </Flex>
-      </Flex>
+      {isLoading ? (
+        <>
+          <YoutubeControllerContainer />
+          <Divider m={"4px 0"} />
+          <QuestionInfoContainer />
+          <Divider m={"4px 0"} />
+          <AnswerTagContainer />
+          <Divider m={"4px 0"} />
+          <Flex m={6} justifyContent={"center"}>
+            <Flex gap={2}>
+              <Button minW={"150px"} colorScheme="green" onClick={handleSongsInfoChange}>
+                등록
+              </Button>
+              <Button minW={"150px"} variant="outline" colorScheme="green" onClick={onOpen}>
+                초기화
+              </Button>
+              <ResetAlertDialog cancelRef={cancelRef} onClose={onClose} isOpen={isOpen} onReset={handleReset} />
+            </Flex>
+          </Flex>
+        </>
+      ) : (
+        <Text>곡 정보를 불러오는 중</Text>
+      )}
     </Flex>
   );
 };
