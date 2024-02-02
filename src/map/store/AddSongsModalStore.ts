@@ -18,25 +18,6 @@ interface AddSongsModalState {
   removeAnswer: (answerToRemove: string) => void;
   removeAllAnswers: () => void;
   resetState: () => void;
-
-  songsInfo: Array<{
-    youtubeId: string;
-    startTime: string;
-    endTime: string;
-    songTitle: string;
-    artistName: string;
-    genre: string;
-    answers: string[];
-  }>;
-  setSongsInfo: (songsInfo: {
-    youtubeId: string;
-    startTime: string;
-    endTime: string;
-    songTitle: string;
-    artistName: string;
-    genre: string;
-    answers: string[];
-  }) => void;
 }
 
 export const useAddSongsModalStore = create<AddSongsModalState>((set) => ({
@@ -74,12 +55,5 @@ export const useAddSongsModalStore = create<AddSongsModalState>((set) => ({
       artistName: "",
       genre: "",
       answers: [],
-      songsInfo: [],
     }),
-
-  songsInfo: [],
-  setSongsInfo: (songInfo) =>
-    set((prev) => ({
-      songsInfo: [...prev.songsInfo, songInfo],
-    })),
 }));

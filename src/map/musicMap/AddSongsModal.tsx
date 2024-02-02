@@ -5,7 +5,7 @@ import YoutubeControllerContainer from "./YoutubeControllerContainer";
 import QuestionInfoContainer from "./QuestionInfoContainer";
 import AnswerTagContainer from "./AnswerTagContainer";
 import ResetAlertDialog from "./ResetAlertDialog";
-import { getSongDetail } from "../api/mapApi";
+import { getSongDetail, songRegister } from "../api/mapApi";
 import { SongInfo } from "../entity/SongInfo";
 
 import "../css/AddSongsModal.css";
@@ -16,7 +16,7 @@ interface AddSongsModalProps {
 
 const AddSongsModal: React.FC<AddSongsModalProps> = ({ selectedSongId }) => {
   const toast = useToast();
-  const { youtubeId, startTime, endTime, songTitle, artistName, genre, answers, resetState, setSongsInfo } = useAddSongsModalStore();
+  const { youtubeId, startTime, endTime, songTitle, artistName, genre, answers, resetState } = useAddSongsModalStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const [songInfo, setSongInfo] = useState<SongInfo>();
@@ -50,9 +50,25 @@ const AddSongsModal: React.FC<AddSongsModalProps> = ({ selectedSongId }) => {
     resetState();
   };
 
-  const handleSongsInfoChange = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const showToast = (title: string) => {
+    return toast({
+      title,
+      status: "error",
+      duration: 9000,
+      isClosable: true,
+    });
+  };
+
+  const handleSongsInfoChange = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setSongsInfo({ youtubeId, startTime, endTime, songTitle, artistName, genre, answers });
+
+    if (!youtubeId) return showToast("영상을 등록해주세요");
+    if (!songTitle) return showToast("노래 제목을 작성해주세요");
+    if (!artistName) return showToast("가수 이름을 작성해주세요");
+    if (!genre) return showToast("장르를 선택해주세요");
+    if (!answers.length) return showToast("정답을 입력해주세요");
+
+    await songRegister({ youtubeId, startTime, endTime, songTitle, artistName, genre, answers });
     clearInputFields();
   };
 
