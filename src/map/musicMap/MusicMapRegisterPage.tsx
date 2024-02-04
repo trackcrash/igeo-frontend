@@ -46,7 +46,7 @@ const MusicMapRegisterPage: React.FC = () => {
   const toast = useToast();
   const [songList, setSongList] = useState<SongListResponseForm[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedSongId, setSelectedSongId] = useState<number | null>(null);
   const openModal = (songId: number | null = null) => {
     setSelectedSongId(songId);

@@ -4,6 +4,8 @@ import { SongRegister } from "../entity/SongRegister";
 
 const userToken = localStorage.getItem("userToken")!;
 
+export const getMapList = async () => {};
+
 export const getSongsList = async () => {
   const response = await axiosInstance.get<SongInfo[]>("/api/mission/list", {
     params: { userToken: userToken },

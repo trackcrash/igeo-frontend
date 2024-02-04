@@ -46,17 +46,17 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleCreateMapButtonClick = () => {
-    onOpen();
+    navigate("/my-map");
   };
 
-  const handleMapButtonClick = (title: string) => {
-    if (title === "music-quiz") {
-      navigate("/music-map-register");
-    } else if (title === "image-quiz") {
-      alert("준비중입니다");
-      // navigate("/image-map-register");
-    }
-  };
+  // const handleMapButtonClick = (title: string) => {
+  //   if (title === "music-quiz") {
+  //     navigate("/music-map-register");
+  //   } else if (title === "image-quiz") {
+  //     alert("준비중입니다");
+  //     // navigate("/image-map-register");
+  //   }
+  // };
 
   const goToLoginPage = () => {
     navigate("/login");
@@ -75,7 +75,8 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
       </Box>
       <Spacer />
       <ButtonGroup>
-        <Button onClick={handleCreateMapButtonClick}>맵 만들기</Button>
+        <Button onClick={handleCreateMapButtonClick}>맵 생성</Button>
+        {/* <Button onClick={handleCreateMapButtonClick}>맵 만들기</Button>
         <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} isCentered>
           <ModalOverlay />
           <ModalContent>
@@ -94,7 +95,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
               </Flex>
             </ModalBody>
           </ModalContent>
-        </Modal>
+        </Modal> */}
 
         <Button colorScheme="green" onClick={goToLoginPage}>
           로그인

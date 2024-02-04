@@ -8,6 +8,7 @@ import MainPage from "./page/MainPage";
 import LoginPage from "./page/user/LoginPage";
 import WithDrawerPage from "./page/user/withdrawal/WithdrawalPage";
 import Exit from "./page/user/withdrawal/WithdrawalComplete";
+import MapSelectPage from "./map/MapSelectPage";
 import MusicMapRegisterPage from "./map/musicMap/MusicMapRegisterPage";
 
 const theme = extendTheme({
@@ -30,6 +31,7 @@ export const App = () => (
             <Route path="login" element={<LoginPage />} />
             <Route path="withdrawer" element={<WithDrawerPage />} />
             <Route path="exit" element={<Exit />} />
+            <Route path="my-map" element={<MapSelectPage/>} />
             <Route path="music-map-register" element={<MusicMapRegisterPage />} />
           </Route>
         </Routes>
