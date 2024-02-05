@@ -1,10 +1,24 @@
 import axiosInstance from "../../utility/axiosInstance";
+import { MapInfo } from "../entity/MapInfo";
 import { SongInfo } from "../entity/SongInfo";
 import { SongRegister } from "../entity/SongRegister";
 
 const userToken = localStorage.getItem("userToken")!;
 
-export const getMapList = async () => {};
+export const getMapList = async () => {
+  const response = await axiosInstance.get<MapInfo[]>("/api", {
+    params: { userToken: userToken },
+  });
+  console.log("map list data: ", response.data);
+  return response.data;
+};
+
+export const updateMapInfo = async (updatedInfo: MapInfo[]) => {
+  await axiosInstance.post<MapInfo[]>("/api", {
+    updatedInfo,
+  });
+  console.log("map update complite");
+};
 
 export const getSongsList = async () => {
   const response = await axiosInstance.get<SongInfo[]>("/api/mission/list", {

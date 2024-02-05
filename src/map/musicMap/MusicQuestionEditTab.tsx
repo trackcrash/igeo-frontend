@@ -19,6 +19,7 @@ import { FaPlus } from "react-icons/fa";
 import { getSongsList } from "../api/mapApi";
 import { SongListResponseForm } from "../entity/SongList";
 import "../css/MusicMapRegisterPage.css";
+import { useParams } from "react-router-dom";
 
 interface DummyOptions {
   songId: number;
@@ -42,8 +43,14 @@ const dummyItems: DummyOptions[] = [
   },
 ];
 
-const MusicMapRegisterPage: React.FC = () => {
+interface RouteParams {
+  missionId: string;
+  [key: string]: string;
+}
+
+const MusicMapEditTab: React.FC = () => {
   const toast = useToast();
+  const { missionId } = useParams<RouteParams>();
   const [songList, setSongList] = useState<SongListResponseForm[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -95,32 +102,6 @@ const MusicMapRegisterPage: React.FC = () => {
           </Card>
         </SimpleGrid>
       )}
-      {/* {isLoading ? (
-        loadedItems &&
-        loadedItems.length > 0 && (
-          <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
-            {cardsOptions.map((card: SongCardOptions, idx: number) => (
-              <Card cursor={"pointer"} key={idx} p={"8px 0"} onClick={() => openModal(song.songId)}>
-                <Text as="b" fontSize="xl">
-                  {song.songTitle}
-                </Text>
-                <Image src={`https://img.youtube.com/vi/${song.videoId}/hqdefault.jpg`} />
-              </Card>
-            ))}
-            <Card cursor={"pointer"} onClick={() => openModal(null)}>
-              <CardBody display={"flex"} justifyContent={"center"}>
-                <Center flexDirection={"column"}>
-                  <FaPlus />
-                  <Text>문제 추가</Text>
-                </Center>
-              </CardBody>
-            </Card>
-          </SimpleGrid>
-        )
-      ) : (
-        <p>곡 정보 불러오는 중</p>
-      )} */}
-
       <Modal id="addsongmodal" isCentered closeOnOverlayClick={false} size={"xl"} isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
         <ModalContent>
@@ -135,4 +116,4 @@ const MusicMapRegisterPage: React.FC = () => {
   );
 };
 
-export default MusicMapRegisterPage;
+export default MusicMapEditTab;

@@ -1,32 +1,13 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  HStack,
-  Highlight,
-  Image,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  SimpleGrid,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  Text,
-  Tooltip,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Center, Flex, HStack, Image, SimpleGrid, Tag, TagLabel, TagLeftIcon, Text, Tooltip, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { MapListResponseForm } from "./entity/MusicMapInfo";
-import { getMapList } from "./api/mapApi";
+import { MapInfo } from "./entity/MapInfo";
+import { getMapList, updateMapInfo } from "./api/mapApi";
 import { FiPlay, FiImage, FiTrash2, FiLock, FiUnlock } from "react-icons/fi";
 import { RiMusic2Fill } from "react-icons/ri";
+import { useMapInfoStore } from "./store/MapInfoStore";
+import CreateMapModal from "./CreateMapModal";
+import DeleteMapModal from "./DeleteMapModal";
 
 interface DummyOptions {
   missionId: number;
@@ -62,43 +43,67 @@ const dummyItems: DummyOptions[] = [
 const MapSelectPage = () => {
   const toast = useToast();
   const navigate = useNavigate();
-  const [mapList, setMapList] = useState<MapListResponseForm[]>();
+  const { mapInfo, setMapInfo } = useMapInfoStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedMapTitle, setSelectedMapTitle] = useState<string>();
   const [selectedMapId, setSelectedMapId] = useState<number>();
-  const openModal = (title: string, missionId: number) => {
+  const [confirmText, setConfirmText] = useState<string>("");
+  const [isDeleteMapModalOpen, setIsDeleteMapModalOpen] = useState<boolean>(false);
+  const [isCreateMapModalOpen, setCreateMapModalOpen] = useState<boolean>(false);
+
+  const openDeleteMapModal = (title: string, missionId: number) => {
     setSelectedMapTitle(title);
     setSelectedMapId(missionId);
-    setIsOpen(true);
+    setIsDeleteMapModalOpen(true);
   };
-  const closeModal = () => {
-    setIsOpen(false);
+
+  const closeDeleteMapModal = () => {
+    setIsDeleteMapModalOpen(false);
     setConfirmText("");
   };
-  const [confirmText, setConfirmText] = useState<string>("");
+
+  const openCreateMapModal = () => {
+    setCreateMapModalOpen(true);
+  };
+
+  const closeCreateMapModal = () => {
+    setCreateMapModalOpen(false);
+  };
 
   useEffect(() => {
     const fetchSongListData = async () => {
       try {
         const data = await getMapList();
-        setMapList(data!);
+        setMapInfo(data);
         setIsLoading(true);
       } catch (error) {
         toast({
           title: "곡 목록 로드 실패",
           description: "곡 목록를 가져오는 중 오류가 발생했습니다.",
           status: "error",
-          duration: 9000,
+          duration: 5000,
           isClosable: true,
         });
       }
     };
     fetchSongListData();
-  }, [mapList]);
+  }, []);
 
-  const moveToSelectedMap = (missionId: number) => {
-    navigate(`/music-map-register/${missionId}`);
+  const moveToSelectedMap = (type: string, missionId: number) => {
+    navigate(`/map-edit/${type.toLowerCase()}/${missionId}`);
+  };
+
+  const handleIsPublicChange = async (missionId: number) => {
+    const mapIndex = mapInfo.findIndex((map) => map.missionId === missionId);
+    if (mapIndex !== -1) {
+      const updatedMapInfo = [...mapInfo];
+      updatedMapInfo[mapIndex] = {
+        ...updatedMapInfo[mapIndex],
+        isPublic: !updatedMapInfo[mapIndex].isPublic,
+      };
+      setMapInfo(updatedMapInfo);
+      await updateMapInfo(mapInfo);
+    }
   };
 
   const handleMapDelete = () => {
@@ -121,7 +126,7 @@ const MapSelectPage = () => {
             overflow="hidden"
             boxShadow="md"
             border="1px solid #bbbbbb"
-            onClick={() => moveToSelectedMap(map.missionId)}
+            onClick={() => moveToSelectedMap(map.mapType, map.missionId)}
             cursor="pointer"
             _hover={{ transform: "scale(1.02)", transition: "transform 0.3s" }}
           >
@@ -169,6 +174,7 @@ const MapSelectPage = () => {
                     <Tag
                       onClick={(e) => {
                         e.stopPropagation();
+                        handleIsPublicChange(map.missionId);
                       }}
                     >
                       {map.isPublic ? <FiLock /> : <FiUnlock />}
@@ -178,7 +184,7 @@ const MapSelectPage = () => {
                     <Tag
                       onClick={(e) => {
                         e.stopPropagation();
-                        openModal(map.mapTitle, map.missionId);
+                        openDeleteMapModal(map.mapTitle, map.missionId);
                       }}
                     >
                       <FiTrash2 />
@@ -189,36 +195,26 @@ const MapSelectPage = () => {
             </Box>
           </Box>
         ))}
+        <Box
+          borderRadius="lg"
+          overflow="hidden"
+          boxShadow="md"
+          border="1px solid #bbbbbb"
+          cursor="pointer"
+          _hover={{ transform: "scale(1.02)", transition: "transform 0.3s" }}
+        >
+          <Text onClick={openCreateMapModal}>맵 생성</Text>
+        </Box>
       </SimpleGrid>
-      <Modal isCentered closeOnOverlayClick={false} size={"xl"} isOpen={isOpen} onClose={closeModal}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>맵 삭제</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Center>
-              <Text as={"b"} fontSize="lg" mb={1}>
-                삭제한 맵은 복구할 수 없습니다.
-              </Text>
-            </Center>
-            <Center>
-              <Text as={"b"} fontSize="lg" mb={3}>
-                계속 진행하시려면 아래 입력창에 맵 이름을 입력해주세요
-              </Text>
-            </Center>
-            <br />
-            <Text mb={2}>
-              <Highlight query={`${selectedMapTitle}`} styles={{ px: "2", py: "1", rounded: "full", bg: "red.100", fontWeight: "bold" }}>
-                {selectedMapTitle!}
-              </Highlight>
-            </Text>
-            <Input placeholder={`${selectedMapTitle}`} onChange={(e) => setConfirmText(e.target.value)} />
-          </ModalBody>
-          <Button colorScheme="red" onClick={handleMapDelete} isDisabled={confirmText !== selectedMapTitle}>
-            삭제
-          </Button>
-        </ModalContent>
-      </Modal>
+      <CreateMapModal isOpen={isCreateMapModalOpen} onClose={closeCreateMapModal} />
+      <DeleteMapModal
+        isOpen={isDeleteMapModalOpen}
+        onClose={closeDeleteMapModal}
+        handleMapDelete={handleMapDelete}
+        confirmText={confirmText}
+        selectedMapTitle={selectedMapTitle}
+        setConfirmText={setConfirmText}
+      />
     </Box>
   );
 };
