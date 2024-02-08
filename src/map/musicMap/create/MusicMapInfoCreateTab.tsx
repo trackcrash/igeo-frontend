@@ -23,8 +23,8 @@ import { FiPlay } from "react-icons/fi";
 import { RiMusic2Fill } from "react-icons/ri";
 import { useMusicMapCreateStore } from "../../store/MusicMapCreateStore";
 
-const MusicMapInfoCreateTab = () => {
-  const { thumbnailId, mapTitle, mapDescription, numberOfQustion, isPublic, setMapTitle, setMapDescription, setIsPublic } = useMusicMapCreateStore();
+const MusicMapInfoCreateTab: React.FC = () => {
+  const { thumbnailId, mapTitle, mapDescription, setMapTitle, setMapDescription } = useMusicMapCreateStore();
 
   const handleMapTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMapTitle(e.target.value);

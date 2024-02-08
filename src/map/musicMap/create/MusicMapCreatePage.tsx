@@ -7,8 +7,8 @@ const MusicMapCreatePage: React.FC = () => {
   return (
     <Tabs isFitted variant="enclosed">
       <TabList mb="1em">
-        <Tab>맵 정보 수정</Tab>
-        <Tab>문제 수정</Tab>
+        <Tab>맵 정보 등록</Tab>
+        <Tab>문제 등록</Tab>
       </TabList>
       <TabPanels>
         <TabPanel>
