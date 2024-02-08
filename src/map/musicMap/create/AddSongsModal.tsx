@@ -11,7 +11,11 @@ export interface SelectedSongIdProps {
   selectedSongId: number | null;
 }
 
-const AddSongsModal: React.FC<SelectedSongIdProps> = ({ selectedSongId }) => {
+type AddSongsModalProps = SelectedSongIdProps & {
+  onModalClose: () => void;
+};
+
+const AddSongsModal: React.FC<AddSongsModalProps> = ({ selectedSongId, onModalClose }) => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement | null>(null);
@@ -23,16 +27,34 @@ const AddSongsModal: React.FC<SelectedSongIdProps> = ({ selectedSongId }) => {
 
   const handleSongsInfoChange = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const { youtubeId, startTime, endTime, songTitle, artistName, genre, answers } = useAddSongsModalStore.getState();
-    useSongsListStore.getState().addSong({
-      youtubeId,
-      startTime,
-      endTime,
-      songTitle,
-      artistName,
-      genre,
-      answers,
-    });
+    try {
+      const { youtubeId, startTime, endTime, songTitle, artistName, genre, answers } = useAddSongsModalStore.getState();
+      useSongsListStore.getState().addSong({
+        youtubeId,
+        startTime,
+        endTime,
+        songTitle,
+        artistName,
+        genre,
+        answers,
+      });
+      toast({
+        title: "저장 완료",
+        description: "입력하신 내용이 저장되었습니다.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch {
+      toast({
+        title: "저장 실패",
+        description: "노래 정보 저장 중 오류가 발생했습니다.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    onModalClose();
     clearInputFields();
   };
 
@@ -44,7 +66,7 @@ const AddSongsModal: React.FC<SelectedSongIdProps> = ({ selectedSongId }) => {
         title: "초기화 완료",
         description: "입력하신 내용이 초기화되었습니다.",
         status: "success",
-        duration: 9000,
+        duration: 5000,
         isClosable: true,
       });
     } catch {
@@ -52,7 +74,7 @@ const AddSongsModal: React.FC<SelectedSongIdProps> = ({ selectedSongId }) => {
         title: "초기화 실패",
         description: "초기화 중 오류가 발생했습니다.",
         status: "error",
-        duration: 9000,
+        duration: 5000,
         isClosable: true,
       });
     }

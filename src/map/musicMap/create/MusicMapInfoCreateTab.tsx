@@ -37,14 +37,7 @@ const MusicMapInfoCreateTab: React.FC = () => {
   return (
     <div>
       <SimpleGrid m={"0 auto"} maxW={"1000px"} columns={{ base: 1, sm: 2, md: 2 }} spacing={4}>
-        <Box
-          borderRadius="lg"
-          overflow="hidden"
-          boxShadow="md"
-          border="1px solid #bbbbbb"
-          cursor="pointer"
-          _hover={{ transform: "scale(1.02)", transition: "transform 0.3s" }}
-        >
+        <Box borderRadius="lg" overflow="hidden" boxShadow="md" border="1px solid #bbbbbb">
           <Image src={`https://img.youtube.com/vi/${thumbnailId}/hqdefault.jpg`} borderTopRadius="md" objectFit="cover" w="100%" h="200px" />
           <Box p={4}>
             <Center>

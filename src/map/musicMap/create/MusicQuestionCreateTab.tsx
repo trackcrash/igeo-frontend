@@ -33,14 +33,20 @@ const MusicQuestionCreateTab: React.FC = () => {
       <SimpleGrid spacing={4} m={"0 20px"} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
         {songs.length > 0 &&
           songs.map((song: SongInfo, idx: number) => (
-            <Card cursor={"pointer"} key={idx} p={"8px 0"} onClick={() => openModal(song.songId)}>
+            <Card
+              cursor={"pointer"}
+              _hover={{ transform: "scale(1.02)", transition: "transform 0.3s" }}
+              key={idx}
+              p={"8px 0"}
+              onClick={() => openModal(song.songId)}
+            >
               <Text as="b" fontSize="xl">
                 {song.songTitle}
               </Text>
               <Image src={`https://img.youtube.com/vi/${song.youtubeId}/hqdefault.jpg`} />
             </Card>
           ))}
-        <Card cursor={"pointer"} onClick={() => openModal(null)}>
+        <Card cursor={"pointer"} _hover={{ transform: "scale(1.02)", transition: "transform 0.3s" }} onClick={() => openModal(null)}>
           <CardBody display={"flex"} justifyContent={"center"}>
             <Center flexDirection={"column"}>
               <FaPlus />
@@ -55,7 +61,7 @@ const MusicQuestionCreateTab: React.FC = () => {
           <ModalHeader>곡 추가</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <AddSongsModal selectedSongId={selectedSongId} />
+            <AddSongsModal selectedSongId={selectedSongId} onModalClose={closeModal} />
           </ModalBody>
         </ModalContent>
       </Modal>
