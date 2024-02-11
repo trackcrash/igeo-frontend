@@ -3,6 +3,7 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { UserLayout } from "./Layout";
 import { AuthProvider } from "./layout/header/AuthConText";
+import '@fontsource-variable/noto-sans-kr';
 
 import MainPage from "./page/MainPage";
 import LoginPage from "./page/user/LoginPage";
@@ -19,6 +20,9 @@ const theme = extendTheme({
         textAlign: "center"
       },
     },
+  },
+  fonts: {
+    body: `'Noto Sans KR Variable', sans-serif`,
   },
 });
 
