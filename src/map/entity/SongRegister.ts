@@ -1,9 +1,12 @@
 export type SongRegister = {
+  songId: number;
   youtubeId: string;
   startTime: string;
   endTime: string;
-  songTitle: string;
-  artistName: string;
   genre: string;
-  answers: string[];
+  answers: AnswerList[];
 };
+
+interface AnswerList {
+  answers: string[];
+}

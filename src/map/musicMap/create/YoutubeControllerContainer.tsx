@@ -106,7 +106,7 @@ const YoutubeControllerContainer: React.FC<SelectedSongIdProps> = ({ selectedSon
   const handleCurrendTime = (isStartTime: boolean) => {
     if (playerRef.current) {
       const currentTime = playerRef.current.getCurrentTime();
-      console.log(`현재 재생 시간: ${currentTime}초`);
+      // console.log(`현재 재생 시간: ${currentTime}초`);
       if (isStartTime) {
         setStartTime(parseCurrentTime(currentTime));
       } else {

@@ -1,11 +1,13 @@
 import React, { useRef } from "react";
 import { Flex, Button, Divider, useDisclosure, useToast } from "@chakra-ui/react";
 import YoutubeControllerContainer from "./YoutubeControllerContainer";
-import QuestionInfoContainer from "./QuestionInfoContainer";
-import AnswerTagContainer from "./AnswerTagContainer";
+import MusicInfoContainer from "./MusicInfoContainer";
+import AnswerContainer from "./AnswerContainer";
 import ResetAlertDialog from "./ResetAlertDialog";
 import { useAddSongsModalStore } from "../../store/AddSongsModalStore";
 import { useSongsListStore } from "../../store/SongsListStore";
+
+import "../../css/AddSongsModal.css";
 
 export interface SelectedSongIdProps {
   selectedSongId: number | null;
@@ -28,16 +30,23 @@ const AddSongsModal: React.FC<AddSongsModalProps> = ({ selectedSongId, onModalCl
   const handleSongsInfoChange = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const { youtubeId, startTime, endTime, songTitle, artistName, genre, answers } = useAddSongsModalStore.getState();
-      useSongsListStore.getState().addSong({
+      const { youtubeId, startTime, endTime, songTitle, artistName, categories, answersList } = useAddSongsModalStore.getState();
+      const songData = {
         youtubeId,
         startTime,
         endTime,
         songTitle,
         artistName,
-        genre,
-        answers,
-      });
+        categories,
+        answersList,
+      };
+      if (!selectedSongId) {
+        useSongsListStore.getState().addSong(songData);
+        // console.log(songData);
+      } else {
+        useSongsListStore.getState().updateSong(selectedSongId, songData);
+        // console.log(songData);
+      }
       toast({
         title: "저장 완료",
         description: "입력하신 내용이 저장되었습니다.",
@@ -83,10 +92,8 @@ const AddSongsModal: React.FC<AddSongsModalProps> = ({ selectedSongId, onModalCl
   return (
     <Flex direction="column">
       <YoutubeControllerContainer selectedSongId={selectedSongId} />
-      <Divider m={"4px 0"} />
-      <QuestionInfoContainer selectedSongId={selectedSongId} />
-      <Divider m={"4px 0"} />
-      <AnswerTagContainer selectedSongId={selectedSongId} />
+      <MusicInfoContainer selectedSongId={selectedSongId} />
+      <AnswerContainer selectedSongId={selectedSongId} />
       <Divider m={"4px 0"} />
       <Flex m={6} justifyContent={"center"}>
         <Flex gap={2}>

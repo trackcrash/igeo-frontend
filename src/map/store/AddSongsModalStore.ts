@@ -1,22 +1,26 @@
 import { create } from "zustand";
 
+interface AnswerList {
+  answers: string[];
+}
+
 interface AddSongsModalState {
   youtubeId: string;
   startTime: string;
   endTime: string;
   songTitle: string;
   artistName: string;
-  genre: string;
-  answers: string[];
-  setYoutubeId: (youtubeLink: string) => void;
+  categories: string[];
+  answersList: AnswerList[];
+  setYoutubeId: (youtubeId: string) => void;
   setStartTime: (startTime: string) => void;
   setEndTime: (endTime: string) => void;
   setSongTitle: (songTitle: string) => void;
   setArtistName: (artistName: string) => void;
-  setGenre: (genre: string) => void;
-  setAnswers: (answers: string[]) => void;
-  removeAnswer: (answerToRemove: string) => void;
-  removeAllAnswers: () => void;
+  setCategories: (categories: string[]) => void;
+  setAnswersList: (answersList: AnswerList[]) => void;
+  removeAnswerList: (index: number) => void;
+  removeAllAnswersList: () => void;
   resetState: () => void;
 }
 
@@ -26,26 +30,22 @@ export const useAddSongsModalStore = create<AddSongsModalState>((set) => ({
   endTime: "00:00:00",
   songTitle: "",
   artistName: "",
-  genre: "",
-  answers: [],
+  categories: [""],
+  answersList: [{ answers: [] }],
   setYoutubeId: (youtubeId) => set({ youtubeId }),
   setStartTime: (startTime) => set({ startTime }),
   setEndTime: (endTime) => set({ endTime }),
   setSongTitle: (songTitle) => set({ songTitle }),
   setArtistName: (artistName) => set({ artistName }),
-  setGenre: (genre) => set({ genre }),
-  setAnswers: (answers: string[]) =>
-    set((prev) => ({
-      answers: [...prev.answers, ...answers],
-    })),
-  removeAnswer: (answerToRemove: string) =>
-    set((prev) => ({
-      answers: prev.answers.filter((answer) => answer !== answerToRemove),
-    })),
-  removeAllAnswers: () =>
-    set(() => ({
-      answers: [],
-    })),
+  setCategories: (categories) => set({ categories }),
+  setAnswersList: (answersList) => set({ answersList }),
+  removeAnswerList: (index) =>
+    set((state) => {
+      const newAnswersList = [...state.answersList];
+      newAnswersList.splice(index, 1);
+      return { answersList: newAnswersList };
+    }),
+  removeAllAnswersList: () => set({ answersList: [] }),
   resetState: () =>
     set({
       youtubeId: "",
@@ -53,7 +53,7 @@ export const useAddSongsModalStore = create<AddSongsModalState>((set) => ({
       endTime: "00:00:00",
       songTitle: "",
       artistName: "",
-      genre: "",
-      answers: [],
+      categories: [""],
+      answersList: [{ answers: [] }],
     }),
 }));

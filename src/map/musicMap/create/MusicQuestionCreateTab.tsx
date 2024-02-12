@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -12,21 +12,75 @@ import {
   CardBody,
   Center,
   Image,
+  useToast,
+  Stack,
 } from "@chakra-ui/react";
 import AddSongsModal from "./AddSongsModal";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaStar } from "react-icons/fa";
+import { FiTrash2 } from "react-icons/fi";
 import { useSongsListStore } from "../../store/SongsListStore";
 import { SongInfo } from "../../entity/SongInfo";
+import { useAddSongsModalStore } from "../../store/AddSongsModalStore";
+import { useMusicMapCreateStore } from "../../store/MusicMapCreateStore";
 
 const MusicQuestionCreateTab: React.FC = () => {
+  const toast = useToast();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedSongId, setSelectedSongId] = useState<number | null>(null);
+  const { resetState } = useAddSongsModalStore();
+  const { thumbnailId, setThumbnailId } = useMusicMapCreateStore();
+  const { songs, removeSong } = useSongsListStore();
+  const [hoveredStar, setHoveredStar] = useState<boolean[]>(Array(songs.length).fill(false));
+  const [hoveredTrash, setHoveredTrash] = useState<boolean[]>(Array(songs.length).fill(false));
+
   const openModal = (songId: number | null = null) => {
     setSelectedSongId(songId);
     setIsOpen(true);
   };
-  const closeModal = () => setIsOpen(false);
-  const { songs } = useSongsListStore();
+  const closeModal = () => {
+    setIsOpen(false);
+    resetState();
+  };
+
+  useEffect(() => {
+    if (songs.length > 0) {
+      setThumbnailId(songs[0].youtubeId);
+    }
+  }, [songs]);
+
+  const handleStarHover = (idx: number, isHoveredStar: boolean) => {
+    const updatedHoveredStar = [...hoveredStar];
+    updatedHoveredStar[idx] = isHoveredStar;
+    setHoveredStar(updatedHoveredStar);
+  };
+
+  const handleTrashHover = (idx: number, isHoveredTrash: boolean) => {
+    const updatedHoveredTrash = [...hoveredTrash];
+    updatedHoveredTrash[idx] = isHoveredTrash;
+    setHoveredTrash(updatedHoveredTrash);
+  };
+
+  const handleSetThumbnail = (youtubeId: string) => {
+    setThumbnailId(youtubeId);
+    toast({
+      title: "썸네일 등록 완료",
+      description: "선택한 곡이 썸네일로 표시됩니다.",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+  };
+
+  const handleRemoveCard = (songId: number) => {
+    removeSong(songId);
+    toast({
+      title: "삭제 완료",
+      description: "선택한 곡이 삭제되었습니다.",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+  };
 
   return (
     <div>
@@ -38,12 +92,53 @@ const MusicQuestionCreateTab: React.FC = () => {
               _hover={{ transform: "scale(1.02)", transition: "transform 0.3s" }}
               key={idx}
               p={"8px 0"}
+              border="1px solid #bbbbbb"
               onClick={() => openModal(song.songId)}
             >
-              <Text as="b" fontSize="xl">
-                {song.songTitle}
+              <Text as="b" fontSize="xl" mb={1}>
+                {song.answersList.map((answer, idx) => answer.answers[0] + (idx < song.answersList.length - 1 ? " - " : ""))}
               </Text>
               <Image src={`https://img.youtube.com/vi/${song.youtubeId}/hqdefault.jpg`} />
+              <Stack
+                flexDirection={"row"}
+                style={{
+                  fontSize: "1.5em",
+                  position: "absolute",
+                  right: "0.5em",
+                  bottom: "0.5em",
+                }}
+              >
+                <FaStar
+                  onMouseEnter={() => handleStarHover(idx, true)}
+                  onMouseLeave={() => handleStarHover(idx, false)}
+                  style={{
+                    borderRadius: "10em",
+                    border: "1px solid white",
+                    padding: "3px",
+                    color: hoveredStar[idx] || song.youtubeId === thumbnailId ? "yellow" : "white",
+                    transform: hoveredStar[idx] ? "rotateY(180deg)" : "rotate(0)",
+                    transition: "transform 0.3s",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSetThumbnail(song.youtubeId);
+                  }}
+                />
+                <FiTrash2
+                  onMouseEnter={() => handleTrashHover(idx, true)}
+                  onMouseLeave={() => handleTrashHover(idx, false)}
+                  style={{
+                    borderRadius: "10em",
+                    border: "1px solid white",
+                    padding: "3px",
+                    color: hoveredTrash[idx] ? "red" : "white",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemoveCard(song.songId);
+                  }}
+                />
+              </Stack>
             </Card>
           ))}
         <Card cursor={"pointer"} _hover={{ transform: "scale(1.02)", transition: "transform 0.3s" }} onClick={() => openModal(null)}>
@@ -58,7 +153,7 @@ const MusicQuestionCreateTab: React.FC = () => {
       <Modal id="addsongmodal" isCentered closeOnOverlayClick={false} size={"xl"} isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>곡 추가</ModalHeader>
+          <ModalHeader>문제 추가</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <AddSongsModal selectedSongId={selectedSongId} onModalClose={closeModal} />
