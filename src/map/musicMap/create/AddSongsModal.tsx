@@ -4,10 +4,10 @@ import YoutubeControllerContainer from "./YoutubeControllerContainer";
 import MusicInfoContainer from "./MusicInfoContainer";
 import AnswerContainer from "./AnswerContainer";
 import ResetAlertDialog from "./ResetAlertDialog";
-import { useAddSongsModalStore } from "../../store/AddSongsModalStore";
-import { useSongsListStore } from "../../store/SongsListStore";
+import { useAddSongsModalStore } from "map/store/AddSongsModalStore";
+import { useSongsListStore } from "map/store/SongsListStore";
 
-import "../../css/AddSongsModal.css";
+import "map/css/AddSongsModal.css";
 
 export interface SelectedSongIdProps {
   selectedSongId: number | null;

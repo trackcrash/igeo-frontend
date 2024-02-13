@@ -4,7 +4,7 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { ButtonGroup, Link as ChakraLink, Spacer } from "@chakra-ui/react";
 import { Box, Button, Flex, Heading, Image } from "@chakra-ui/react";
 
-import { ColorModeSwitcher } from "../../ColorModeSwitcher";
+import { ColorModeSwitcher } from "ColorModeSwitcher";
 
 type HeaderProps = {
   children?: ReactNode;

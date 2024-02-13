@@ -18,10 +18,10 @@ import {
 import AddSongsModal from "./AddSongsModal";
 import { FaPlus, FaStar } from "react-icons/fa";
 import { FiTrash2 } from "react-icons/fi";
-import { useSongsListStore } from "../../store/SongsListStore";
-import { SongInfo } from "../../entity/SongInfo";
-import { useAddSongsModalStore } from "../../store/AddSongsModalStore";
-import { useMusicMapCreateStore } from "../../store/MusicMapCreateStore";
+import { useSongsListStore } from "map/store/SongsListStore";
+import { SongInfo } from "map/entity/SongInfo";
+import { useAddSongsModalStore } from "map/store/AddSongsModalStore";
+import { useMusicMapCreateStore } from "map/store/MusicMapCreateStore";
 
 const MusicQuestionCreateTab: React.FC = () => {
   const toast = useToast();

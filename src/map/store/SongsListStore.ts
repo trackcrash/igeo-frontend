@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { SongInfo } from "../entity/SongInfo";
+import { SongInfo } from "map/entity/SongInfo";
 
 interface SongsListState {
   songs: SongInfo[];

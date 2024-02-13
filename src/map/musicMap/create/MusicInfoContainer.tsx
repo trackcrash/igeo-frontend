@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Flex, Input, Text } from "@chakra-ui/react";
 import { SelectedSongIdProps } from "./AddSongsModal";
-import { useAddSongsModalStore } from "../../store/AddSongsModalStore";
-import { useSongsListStore } from "../../store/SongsListStore";
+import { useAddSongsModalStore } from "map/store/AddSongsModalStore";
+import { useSongsListStore } from "map/store/SongsListStore";
 
 const MusicInfoContainer: React.FC<SelectedSongIdProps> = ({ selectedSongId }) => {
   const { songTitle, artistName, hint, setSongTitle, setArtistName, setHint } = useAddSongsModalStore();

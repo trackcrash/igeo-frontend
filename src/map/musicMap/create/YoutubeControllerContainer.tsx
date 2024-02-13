@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Button, Flex, Input, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Text } from "@chakra-ui/react";
 import { FaLongArrowAltRight } from "react-icons/fa";
-import { useAddSongsModalStore } from "../../store/AddSongsModalStore";
+import { useAddSongsModalStore } from "map/store/AddSongsModalStore";
 import YouTube from "react-youtube";
 import { SelectedSongIdProps } from "./AddSongsModal";
-import { useSongsListStore } from "../../store/SongsListStore";
+import { useSongsListStore } from "map/store/SongsListStore";
 
 const timeOptions: number[] = [1, 5, 10, 30];
 

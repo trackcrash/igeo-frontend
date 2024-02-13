@@ -21,8 +21,8 @@ import {
 } from "@chakra-ui/react";
 import { FiPlay } from "react-icons/fi";
 import { RiMusic2Fill } from "react-icons/ri";
-import { useMusicMapCreateStore } from "../../store/MusicMapCreateStore";
-import { useSongsListStore } from "../../store/SongsListStore";
+import { useMusicMapCreateStore } from "map/store/MusicMapCreateStore";
+import { useSongsListStore } from "map/store/SongsListStore";
 
 const MusicMapInfoCreateTab: React.FC = () => {
   const { thumbnailId, mapTitle, mapDescription, genre, isPublic, setMapTitle, setMapDescription, setNumberOfQustion, setGenre, setIsPublic } =

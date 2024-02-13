@@ -1,8 +1,8 @@
-import axiosInstance from "../../utility/axiosInstance";
-import { MapInfo } from "../entity/MapInfo";
-import { SongInfo } from "../entity/SongInfo";
-import { SongRegister } from "../entity/SongRegister";
-import { MusicMapRequestForm } from "../entity/request/MusicMapRequestForm";
+import axiosInstance from "utility/axiosInstance";
+import { MapInfo } from "map/entity/MapInfo";
+import { SongInfo } from "map/entity/SongInfo";
+import { SongRegister } from "map/entity/SongRegister";
+import { MusicMapRequestForm } from "map/entity/request/MusicMapRequestForm";
 
 const userToken = localStorage.getItem("userToken")!;
 

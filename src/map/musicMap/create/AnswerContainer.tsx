@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Flex, Input, Text, Button, Tabs, TabList, Tab, TabPanels, TabPanel, ButtonGroup } from "@chakra-ui/react";
-import HashtagInput from "../../../utility/hashtag/HashtagInput";
-import HashTagList from "../../../utility/hashtag/HashtagList";
-import { useAddSongsModalStore } from "../../store/AddSongsModalStore";
+import HashtagInput from "utility/hashtag/HashtagInput";
+import HashTagList from "utility/hashtag/HashtagList";
+import { useAddSongsModalStore } from "map/store/AddSongsModalStore";
 import { SelectedSongIdProps } from "./AddSongsModal";
-import { useSongsListStore } from "../../store/SongsListStore";
+import { useSongsListStore } from "map/store/SongsListStore";
 
 const AnswerTagContainer: React.FC<SelectedSongIdProps> = ({ selectedSongId }) => {
   const { categories, setCategories, answersList, setAnswersList } = useAddSongsModalStore();

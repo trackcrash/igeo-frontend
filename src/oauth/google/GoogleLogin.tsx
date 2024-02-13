@@ -1,6 +1,6 @@
 import { getImageUrl } from "@/utility/s3/awsS3";
 
-import "../css/LoginButton.css";
+import "oauth/css/LoginButton.css";
 
 interface googleLoginProps {
   onSuccess: () => void;

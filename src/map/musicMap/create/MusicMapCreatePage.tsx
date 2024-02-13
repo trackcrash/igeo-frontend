@@ -2,9 +2,9 @@ import React from "react";
 import { Tabs, TabList, Tab, TabPanels, TabPanel, Button, Stack } from "@chakra-ui/react";
 import MusicMapInfoCreateTab from "./MusicMapInfoCreateTab";
 import MusicQuestionCreateTab from "./MusicQuestionCreateTab";
-import { useSongsListStore } from "../../store/SongsListStore";
-import { useMusicMapCreateStore } from "../../store/MusicMapCreateStore";
-import { MusicInfo, MusicMapRequestForm } from "../../entity/request/MusicMapRequestForm";
+import { useSongsListStore } from "map/store/SongsListStore";
+import { useMusicMapCreateStore } from "map/store/MusicMapCreateStore";
+import { MusicInfo, MusicMapRequestForm } from "map/entity/request/MusicMapRequestForm";
 
 const MusicMapCreatePage: React.FC = () => {
   const { songs } = useSongsListStore();

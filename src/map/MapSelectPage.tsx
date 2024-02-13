@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Box, Center, Flex, HStack, Image, SimpleGrid, Tag, TagLabel, TagLeftIcon, Text, Tooltip, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { MapInfo } from "./entity/MapInfo";
-import { getMapList, updateMapInfo } from "./api/mapApi";
+import { getMapList, updateMapInfo } from "map/api/mapApi";
 import { FiPlay, FiImage, FiTrash2, FiLock, FiUnlock } from "react-icons/fi";
 import { RiMusic2Fill } from "react-icons/ri";
-import { useMapInfoStore } from "./store/MapInfoStore";
+import { useMapInfoStore } from "map/store/MapInfoStore";
 import CreateMapModal from "./CreateMapModal";
 import DeleteMapModal from "./DeleteMapModal";
 
