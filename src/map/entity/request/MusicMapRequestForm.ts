@@ -7,7 +7,7 @@ export type MusicMapRequestForm = {
   PlayNum: number;
   Description: string;
   user_id: string;
-  musics: MusicInfo[][];
+  musics: MusicInfo[];
 };
 
 export type MusicInfo = {

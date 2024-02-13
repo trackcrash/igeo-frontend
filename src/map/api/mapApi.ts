@@ -2,6 +2,7 @@ import axiosInstance from "../../utility/axiosInstance";
 import { MapInfo } from "../entity/MapInfo";
 import { SongInfo } from "../entity/SongInfo";
 import { SongRegister } from "../entity/SongRegister";
+import { MusicMapRequestForm } from "../entity/request/MusicMapRequestForm";
 
 const userToken = localStorage.getItem("userToken")!;
 
@@ -34,12 +35,8 @@ export const getSongDetail = async (songId: number) => {
   return response.data;
 };
 
-export const songRegister = async (data: SongRegister): Promise<boolean> => {
-  const requestData = {
-    userToken: userToken,
-    data: data,
-  };
+export const registerMusicMap = async (data: MusicMapRequestForm): Promise<boolean> => {
+  const requestData = data;
   const response = await axiosInstance.post<boolean>("/api/mission/save", requestData);
-  console.log("check request data: ", response.data);
   return response.data;
 };

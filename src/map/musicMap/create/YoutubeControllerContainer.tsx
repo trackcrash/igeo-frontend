@@ -21,6 +21,7 @@ const YoutubeControllerContainer: React.FC<SelectedSongIdProps> = ({ selectedSon
       const song = useSongsListStore.getState().songs.find((s) => s.songId === selectedSongId);
       if (song) {
         setYoutubeId(song.youtubeId || "");
+        setOriginalLink(`https://youtu.be/${song.youtubeId}`);
         setStartTime(song.startTime || "");
         setEndTime(song.endTime || "");
       }
@@ -43,7 +44,6 @@ const YoutubeControllerContainer: React.FC<SelectedSongIdProps> = ({ selectedSon
         if (originalLink) {
           setEndTime(parseCurrentTime(duration));
         } else {
-          // duration으로 설정
           setEndTime("00:00:00");
         }
       }

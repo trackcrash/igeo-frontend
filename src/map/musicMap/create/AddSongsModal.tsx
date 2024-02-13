@@ -21,31 +21,42 @@ const AddSongsModal: React.FC<AddSongsModalProps> = ({ selectedSongId, onModalCl
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement | null>(null);
-  const { resetState } = useAddSongsModalStore();
+  const { categories, answersList, setCategories, setAnswersList, resetState } = useAddSongsModalStore();
 
   const clearInputFields = () => {
     resetState();
   };
 
+  const handleRemoveEmptyForm = () => {
+    const emptyFormIndex = categories.findIndex((category) => category.trim() === "");
+    if (emptyFormIndex !== -1) {
+      const newCategories = [...categories];
+      const newAnswersList = [...answersList];
+      newCategories.splice(emptyFormIndex, 1);
+      newAnswersList.splice(emptyFormIndex, 1);
+      setCategories(newCategories);
+      setAnswersList(newAnswersList);
+    }
+  };
+
   const handleSongsInfoChange = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const { youtubeId, startTime, endTime, songTitle, artistName, categories, answersList } = useAddSongsModalStore.getState();
+      const { youtubeId, startTime, endTime, songTitle, artistName, hint, categories, answersList } = useAddSongsModalStore.getState();
       const songData = {
         youtubeId,
         startTime,
         endTime,
         songTitle,
         artistName,
+        hint,
         categories,
         answersList,
       };
       if (!selectedSongId) {
         useSongsListStore.getState().addSong(songData);
-        // console.log(songData);
       } else {
         useSongsListStore.getState().updateSong(selectedSongId, songData);
-        // console.log(songData);
       }
       toast({
         title: "저장 완료",
@@ -97,7 +108,14 @@ const AddSongsModal: React.FC<AddSongsModalProps> = ({ selectedSongId, onModalCl
       <Divider m={"4px 0"} />
       <Flex m={6} justifyContent={"center"}>
         <Flex gap={2}>
-          <Button minW={"150px"} colorScheme="green" onClick={handleSongsInfoChange}>
+          <Button
+            minW={"150px"}
+            colorScheme="green"
+            onClick={(e) => {
+              handleRemoveEmptyForm();
+              handleSongsInfoChange(e);
+            }}
+          >
             등록
           </Button>
           <Button minW={"150px"} variant="outline" colorScheme="green" onClick={onOpen}>

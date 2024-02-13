@@ -5,7 +5,7 @@ import { useAddSongsModalStore } from "../../store/AddSongsModalStore";
 import { useSongsListStore } from "../../store/SongsListStore";
 
 const MusicInfoContainer: React.FC<SelectedSongIdProps> = ({ selectedSongId }) => {
-  const { songTitle, artistName, setSongTitle, setArtistName } = useAddSongsModalStore();
+  const { songTitle, artistName, hint, setSongTitle, setArtistName, setHint } = useAddSongsModalStore();
 
   useEffect(() => {
     if (selectedSongId !== null) {
@@ -13,6 +13,7 @@ const MusicInfoContainer: React.FC<SelectedSongIdProps> = ({ selectedSongId }) =
       if (song) {
         setSongTitle(song.songTitle || "");
         setArtistName(song.artistName || "");
+        setHint(song.hint || "");
       }
     }
   }, [selectedSongId]);
@@ -25,6 +26,10 @@ const MusicInfoContainer: React.FC<SelectedSongIdProps> = ({ selectedSongId }) =
     setArtistName(e.target.value);
   };
 
+  const handleHintChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setHint(e.target.value);
+  };
+
   return (
     <Flex direction={"column"}>
       <Text as="b" align={"start"} pl={"10px"} mb={2}>
@@ -33,6 +38,9 @@ const MusicInfoContainer: React.FC<SelectedSongIdProps> = ({ selectedSongId }) =
       <Flex mb={4} gap={4}>
         <Input placeholder="곡 제목" value={songTitle} onChange={handleSongTitleChange} />
         <Input placeholder="가수 이름" value={artistName} onChange={handleArtistNameChange} />
+      </Flex>
+      <Flex mb={4}>
+        <Input placeholder="힌트" value={hint} onChange={handleHintChange} />
       </Flex>
     </Flex>
   );

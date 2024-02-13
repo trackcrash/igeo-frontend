@@ -7,7 +7,7 @@ import { SelectedSongIdProps } from "./AddSongsModal";
 import { useSongsListStore } from "../../store/SongsListStore";
 
 const AnswerTagContainer: React.FC<SelectedSongIdProps> = ({ selectedSongId }) => {
-  const { categories, setCategories, answersList, setAnswersList, removeAnswerList, removeAllAnswersList } = useAddSongsModalStore();
+  const { categories, setCategories, answersList, setAnswersList } = useAddSongsModalStore();
   const [selectedTab, setSelectedTab] = useState<number>(0);
 
   useEffect(() => {
@@ -28,9 +28,12 @@ const AnswerTagContainer: React.FC<SelectedSongIdProps> = ({ selectedSongId }) =
   };
 
   const handleAddForm = () => {
-    setCategories([...categories, ""]);
-    setAnswersList([...answersList, { answers: [] }]);
-    setSelectedTab(categories.length);
+    const lastCategory = categories[categories.length - 1];
+    if (lastCategory.trim() !== "") {
+      setCategories([...categories, ""]);
+      setAnswersList([...answersList, { answers: [] }]);
+      setSelectedTab(categories.length);
+    }
   };
 
   const handleRemoveForm = (index: number) => {
@@ -90,7 +93,7 @@ const AnswerTagContainer: React.FC<SelectedSongIdProps> = ({ selectedSongId }) =
                 <HashTagList answers={answersList[index].answers} onRemoveAnswer={(answer) => handleRemoveAnswer(index, answer)} />
                 <ButtonGroup justifyContent="center" mt={2}>
                   <Button onClick={handleAddForm}>문제 추가</Button>
-                  {categories.length > 1 && <Button onClick={() => handleRemoveForm(index)}>삭제</Button>}
+                  {categories.length > 1 && <Button onClick={() => handleRemoveForm(index)}>문제 삭제</Button>}
                 </ButtonGroup>
               </Flex>
             </TabPanel>

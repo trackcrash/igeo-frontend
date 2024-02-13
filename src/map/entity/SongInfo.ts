@@ -5,6 +5,7 @@ export type SongInfo = {
   endTime: string;
   songTitle: string;
   artistName: string;
+  hint: string;
   categories: string[];
   answersList: AnswerList[];
 };

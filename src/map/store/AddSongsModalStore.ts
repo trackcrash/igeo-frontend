@@ -12,6 +12,7 @@ interface AddSongsModalState {
   artistName: string;
   categories: string[];
   answersList: AnswerList[];
+  hint: string;
   setYoutubeId: (youtubeId: string) => void;
   setStartTime: (startTime: string) => void;
   setEndTime: (endTime: string) => void;
@@ -19,6 +20,7 @@ interface AddSongsModalState {
   setArtistName: (artistName: string) => void;
   setCategories: (categories: string[]) => void;
   setAnswersList: (answersList: AnswerList[]) => void;
+  setHint: (hint: string) => void;
   removeAnswerList: (index: number) => void;
   removeAllAnswersList: () => void;
   resetState: () => void;
@@ -32,6 +34,7 @@ export const useAddSongsModalStore = create<AddSongsModalState>((set) => ({
   artistName: "",
   categories: [""],
   answersList: [{ answers: [] }],
+  hint: "",
   setYoutubeId: (youtubeId) => set({ youtubeId }),
   setStartTime: (startTime) => set({ startTime }),
   setEndTime: (endTime) => set({ endTime }),
@@ -39,6 +42,7 @@ export const useAddSongsModalStore = create<AddSongsModalState>((set) => ({
   setArtistName: (artistName) => set({ artistName }),
   setCategories: (categories) => set({ categories }),
   setAnswersList: (answersList) => set({ answersList }),
+  setHint: (hint) => set({ hint }),
   removeAnswerList: (index) =>
     set((state) => {
       const newAnswersList = [...state.answersList];
