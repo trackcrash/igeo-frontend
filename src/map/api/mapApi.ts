@@ -3,16 +3,10 @@ import { MapInfo } from "map/entity/MapInfo";
 import { SongInfo } from "map/entity/SongInfo";
 import { SongRegister } from "map/entity/SongRegister";
 import { MusicMapRequestForm } from "map/entity/request/MusicMapRequestForm";
+import { UseQueryResult, useQuery } from "react-query";
+import { useMapInfoStore } from "../store/MapInfoStore";
 
 const userToken = localStorage.getItem("userToken")!;
-
-export const getMapList = async () => {
-  const response = await axiosInstance.get<MapInfo[]>("/api", {
-    params: { userToken: userToken },
-  });
-  console.log("map list data: ", response.data);
-  return response.data;
-};
 
 export const updateMapInfo = async (updatedInfo: MapInfo[]) => {
   await axiosInstance.post<MapInfo[]>("/api", {
@@ -39,4 +33,23 @@ export const registerMusicMap = async (data: MusicMapRequestForm): Promise<boole
   const requestData = data;
   const response = await axiosInstance.post<boolean>("/api/mission/save", requestData);
   return response.data;
+};
+
+const getMyMapList = async (): Promise<MapInfo[]> => {
+  const response = await axiosInstance.get<MapInfo[]>("/api", {
+    params: { userToken: userToken },
+  });
+  console.log("map list data: ", response.data);
+  return response.data;
+};
+
+export const useMyMapListQuery = (): UseQueryResult<MapInfo[], unknown> => {
+  const setMapsInfo = useMapInfoStore((state) => state.setMapInfo);
+  const queryResult: UseQueryResult<MapInfo[], unknown> = useQuery("myMapList", getMyMapList, {
+    refetchOnWindowFocus: false,
+    onSuccess: (data) => {
+      setMapsInfo(data);
+    },
+  });
+  return queryResult;
 };

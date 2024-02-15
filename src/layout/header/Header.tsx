@@ -14,7 +14,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   const navigate = useNavigate();
 
   const handleCreateMapButtonClick = () => {
-    navigate("/my-map");
+    navigate("/map/my-map");
   };
 
   const goToLoginPage = () => {

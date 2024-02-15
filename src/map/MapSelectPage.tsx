@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Box, Center, Flex, HStack, Image, SimpleGrid, Tag, TagLabel, TagLeftIcon, Text, Tooltip, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { getMapList, updateMapInfo } from "map/api/mapApi";
+import { useMyMapListQuery } from "map/api/mapApi";
 import { FiPlay, FiImage, FiTrash2, FiLock, FiUnlock } from "react-icons/fi";
 import { RiMusic2Fill } from "react-icons/ri";
 import { useMapInfoStore } from "map/store/MapInfoStore";
 import CreateMapModal from "./CreateMapModal";
 import DeleteMapModal from "./DeleteMapModal";
+import { MapInfo } from "./entity/MapInfo";
 
 interface DummyOptions {
   missionId: number;
@@ -18,7 +19,7 @@ interface DummyOptions {
   isPublic: boolean;
 }
 
-const dummyItems: DummyOptions[] = [
+const dummyItems: MapInfo[] = [
   {
     missionId: 1,
     mapType: "MUSIC",
@@ -43,12 +44,12 @@ const MapSelectPage = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const { mapInfo, setMapInfo } = useMapInfoStore();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedMapTitle, setSelectedMapTitle] = useState<string>();
   const [selectedMapId, setSelectedMapId] = useState<number>();
   const [confirmText, setConfirmText] = useState<string>("");
   const [isDeleteMapModalOpen, setIsDeleteMapModalOpen] = useState<boolean>(false);
   const [isCreateMapModalOpen, setCreateMapModalOpen] = useState<boolean>(false);
+  const { data: mapList, isLoading, isError } = useMyMapListQuery();
 
   const openDeleteMapModal = (title: string, missionId: number) => {
     setSelectedMapTitle(title);
@@ -70,26 +71,29 @@ const MapSelectPage = () => {
   };
 
   useEffect(() => {
-    const fetchSongListData = async () => {
-      try {
-        const data = await getMapList();
-        setMapInfo(data);
-        setIsLoading(true);
-      } catch (error) {
-        toast({
-          title: "곡 목록 로드 실패",
-          description: "곡 목록를 가져오는 중 오류가 발생했습니다.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
-    };
-    fetchSongListData();
+    setMapInfo(dummyItems);
   }, []);
 
+  // useEffect(() => {
+  //   const fetchSongListData = async () => {
+  //     try {
+  //       // const data = await getMyMapList();
+  //       setMapInfo(dummyItems);
+  //     } catch (error) {
+  //       toast({
+  //         title: "곡 목록 로드 실패",
+  //         description: "곡 목록를 가져오는 중 오류가 발생했습니다.",
+  //         status: "error",
+  //         duration: 5000,
+  //         isClosable: true,
+  //       });
+  //     }
+  //   };
+  //   fetchSongListData();
+  // }, []);
+
   const moveToSelectedMap = (type: string, missionId: number) => {
-    navigate(`/map-edit/${type.toLowerCase()}/${missionId}`);
+    navigate(`/map/edit/${type.toLowerCase()}/${missionId}`);
   };
 
   const handleIsPublicChange = async (missionId: number) => {
@@ -101,7 +105,7 @@ const MapSelectPage = () => {
         isPublic: !updatedMapInfo[mapIndex].isPublic,
       };
       setMapInfo(updatedMapInfo);
-      await updateMapInfo(mapInfo);
+      // await updateMapInfo(mapInfo);
     }
   };
 
@@ -109,6 +113,14 @@ const MapSelectPage = () => {
     console.log("맵제목", selectedMapTitle);
     console.log(selectedMapId, "번 맵 삭제");
   };
+
+  if (isLoading) {
+    return <Center>로딩중</Center>;
+  }
+
+  if (isError) {
+    return <Center>맵 정보를 가져오는 도중 오류가 발생했습니다.</Center>;
+  }
 
   return (
     <Box p={4}>
@@ -118,7 +130,7 @@ const MapSelectPage = () => {
         </Text>
       </Center>
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
-        {dummyItems.map((map: DummyOptions, idx: number) => (
+        {dummyItems.map((map: MapInfo, idx: number) => (
           <Box
             key={idx}
             borderRadius="lg"

@@ -5,16 +5,13 @@ import MusicQuestionCreateTab from "./MusicQuestionCreateTab";
 import { useSongsListStore } from "map/store/SongsListStore";
 import { useMusicMapCreateStore } from "map/store/MusicMapCreateStore";
 import { MusicInfo, MusicMapRequestForm } from "map/entity/request/MusicMapRequestForm";
+import { registerMusicMap } from "map/api/mapApi";
 
 const MusicMapCreatePage: React.FC = () => {
   const { songs } = useSongsListStore();
   const { thumbnailId, mapTitle, mapDescription, numberOfQustion, genre, isPublic } = useMusicMapCreateStore();
 
-  const handleSaveMap = () => {
-    parseArrayToString();
-  };
-
-  const parseArrayToString = () => {
+  const handleSaveMap = async () => {
     const parsedMusicInfo: MusicInfo[] = songs.map((song) => ({
       id: song.songId,
       title: song.artistName,
@@ -27,15 +24,20 @@ const MusicMapCreatePage: React.FC = () => {
       category: song.categories.map((category) => `[${category}:0]`).join(","),
     }));
 
-    const musicMapRequestData: Omit<MusicMapRequestForm, "MapProducer" | "id" | "user_id"> = {
+    const musicMapRequestData: Omit<MusicMapRequestForm, "MapProducer" | "id" | "user_id"> & { genre: string } = {
       MapName: mapTitle,
       Thumbnail: thumbnailId,
       active: isPublic,
       PlayNum: numberOfQustion,
       Description: mapDescription,
+      genre: genre,
       musics: parsedMusicInfo,
     };
     console.log(musicMapRequestData);
+
+    try {
+      // await registerMusicMap(musicMapRequestData);
+    } catch {}
   };
 
   return (

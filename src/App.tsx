@@ -11,7 +11,6 @@ import WithDrawerPage from "page/user/withdrawal/WithdrawalPage";
 import Exit from "page/user/withdrawal/WithdrawalComplete";
 import MapSelectPage from "map/MapSelectPage";
 import MusicMapCreatePage from "map/musicMap/create/MusicMapCreatePage";
-import MusicMapEditPage from "map/musicMap/MusicMapEditPage";
 
 const theme = extendTheme({
   components: {
@@ -36,9 +35,8 @@ export const App = () => (
             <Route path="login" element={<LoginPage />} />
             <Route path="withdrawer" element={<WithDrawerPage />} />
             <Route path="exit" element={<Exit />} />
-            <Route path="my-map" element={<MapSelectPage/>} />
+            <Route path="map/my-map" element={<MapSelectPage/>} />
             <Route path="map/create/music" element={<MusicMapCreatePage />} />
-            <Route path="map-edit/music/:missionId" element={<MusicMapEditPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
