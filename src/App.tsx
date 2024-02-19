@@ -11,6 +11,7 @@ import WithDrawerPage from "page/user/withdrawal/WithdrawalPage";
 import Exit from "page/user/withdrawal/WithdrawalComplete";
 import MapSelectPage from "map/MapSelectPage";
 import MusicMapCreatePage from "map/musicMap/create/MusicMapCreatePage";
+import RoomListPageMenu from "game/multi/RoomListPageMenu";
 
 const theme = extendTheme({
   components: {
@@ -37,6 +38,7 @@ export const App = () => (
             <Route path="exit" element={<Exit />} />
             <Route path="map/my-map" element={<MapSelectPage/>} />
             <Route path="map/create/music" element={<MusicMapCreatePage />} />
+            <Route path="roomlist" element={<RoomListPageMenu />} />
           </Route>
         </Routes>
       </BrowserRouter>

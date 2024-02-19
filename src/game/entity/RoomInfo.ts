@@ -1,0 +1,8 @@
+import { MapInfo } from "map/entity/MapInfo";
+
+export type RoomInfo = Omit<MapInfo, "missionId" | "mapDescription"> & {
+  roomName: string;
+  roomMaster: string;
+  isPlaying: string;
+  playerNum: number;
+};
