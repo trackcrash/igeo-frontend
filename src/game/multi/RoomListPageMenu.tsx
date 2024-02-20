@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Box, Button, Center, Checkbox, CheckboxGroup, Flex, Input, InputGroup, InputLeftElement, Stack } from "@chakra-ui/react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Box, Button, Center, Checkbox, CheckboxGroup, Flex, Input, InputGroup, InputLeftElement, Stack, useDisclosure } from "@chakra-ui/react";
 import RoomListPage from "game/multi/RoomListPage";
 import { useRoomListQuery } from "game/api/roomListApi";
 import { RoomInfo } from "game/entity/RoomInfo";
 import { FaSearch } from "react-icons/fa";
 import { IoMdRefresh } from "react-icons/io";
+import RoomCreateModal from "./RoomCreateModal";
 
 const DummyRoomList = [
   {
@@ -32,6 +33,8 @@ const DummyRoomList = [
 ];
 
 const RoomListPageMenu: React.FC = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
   const { data: roomList, isLoading, isError, refetch } = useRoomListQuery();
   const [selectedMapTypes, setSelectedMapTypes] = useState<string[]>(["music-quiz", "image-quiz"]);
   const [showPublicRoomOnly, setShowPublicRoomOnly] = useState<boolean>(false);
@@ -106,7 +109,7 @@ const RoomListPageMenu: React.FC = () => {
         <Center as="b" fontSize="3xl">
           멀티플레이 룸
         </Center>
-        <Flex justifyContent={"space-between"}>
+        <Flex justifyContent={"space-between"} alignItems={"center"}>
           <Flex flexDirection={"column"}>
             <CheckboxGroup colorScheme="green">
               <Stack mb={2} spacing={[1, 5]} direction={["column", "row"]}>
@@ -124,16 +127,22 @@ const RoomListPageMenu: React.FC = () => {
               </Checkbox>
             </Stack>
           </Flex>
-          <Flex mb={4} gap={1} alignItems={"center"}>
-            <InputGroup>
-              <InputLeftElement pointerEvents="none">
-                <FaSearch />
-              </InputLeftElement>
-              <Input placeholder="방 이름 검색" value={searchKeyword} onChange={handleSearch} />
-            </InputGroup>
-            <Button leftIcon={<IoMdRefresh />} onClick={handleManualRefetch} isDisabled={!manualRefetchAllowed} colorScheme="green">
-              새로고침
-            </Button>
+          <Flex mb={2} gap={1} flexDirection={"column"}>
+            <Flex gap={1}>
+              <InputGroup>
+                <InputLeftElement pointerEvents="none">
+                  <FaSearch />
+                </InputLeftElement>
+                <Input placeholder="방 이름 검색" value={searchKeyword} onChange={handleSearch} />
+              </InputGroup>
+              <Button leftIcon={<IoMdRefresh />} onClick={handleManualRefetch} isDisabled={!manualRefetchAllowed} colorScheme="green">
+                새로고침
+              </Button>
+            </Flex>
+            <Flex justifyContent={"flex-end"}>
+              <Button onClick={onOpen}>방 생성</Button>
+              <RoomCreateModal cancelRef={cancelRef} onClose={onClose} isOpen={isOpen} />
+            </Flex>
           </Flex>
         </Flex>
       </Stack>

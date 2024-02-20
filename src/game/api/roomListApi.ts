@@ -3,7 +3,7 @@ import { UseQueryResult, useQuery } from "react-query";
 import { RoomInfo } from "game/entity/RoomInfo";
 
 const getRoomList = async (): Promise<RoomInfo[]> => {
-  const response = await axiosInstance.get<RoomInfo[]>("/api");
+  const response = await axiosInstance.get<RoomInfo[]>("/room_list");
   console.log("room list data: ", response.data);
   return response.data;
 };
