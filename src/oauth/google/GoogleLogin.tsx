@@ -1,5 +1,3 @@
-import { getImageUrl } from "@/utility/s3/awsS3";
-
 import "oauth/css/LoginButton.css";
 
 interface googleLoginProps {
@@ -7,16 +5,18 @@ interface googleLoginProps {
 }
 
 const GoogleLoginButton: React.FC<googleLoginProps> = ({ onSuccess }) => {
-  const CLIENT_ID = `${process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID}`;
-  const REDIRECT_URI = `${process.env.REACT_APP_GOOGLE_REDIRECT_URL}`;
-  const googleURL =
-    "https://accounts.google.com/o/oauth2/v2/auth?" +
-    "scope=https://www.googleapis.com/auth/userinfo.profile" +
-    "+https://www.googleapis.com/auth/userinfo.email&" +
-    "response_type=code&" +
-    `redirect_uri=${REDIRECT_URI}&` +
-    `client_id=${CLIENT_ID}&` +
-    "access_type=offline";
+  // const CLIENT_ID = `${process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID}`;
+  // const REDIRECT_URI = `${process.env.REACT_APP_GOOGLE_REDIRECT_URL}`;
+  // const googleURL =
+  //   "https://accounts.google.com/o/oauth2/v2/auth?" +
+  //   "scope=https://www.googleapis.com/auth/userinfo.profile" +
+  //   "+https://www.googleapis.com/auth/userinfo.email&" +
+  //   "response_type=code&" +
+  //   `redirect_uri=${REDIRECT_URI}&` +
+  //   `client_id=${CLIENT_ID}&` +
+  //   "access_type=offline";
+  const BASE_URL = `${process.env.REACT_APP_BASE_URL}`;
+  const googleURL = `${BASE_URL}/login/google`;
 
   return (
     <div className="oauth-login-btn-container" onClick={() => window.location.replace(googleURL)}>
