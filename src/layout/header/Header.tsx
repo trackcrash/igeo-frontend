@@ -1,10 +1,12 @@
 import React, { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link as ReactRouterLink } from "react-router-dom";
-import { ButtonGroup, Link as ChakraLink, Spacer } from "@chakra-ui/react";
-import { Box, Button, Flex, Heading, Image } from "@chakra-ui/react";
+import { Link as ChakraLink, Spacer } from "@chakra-ui/react";
+import { Button, Flex, Image } from "@chakra-ui/react";
+import { useAuth } from "./AuthConText";
 
 import { ColorModeSwitcher } from "ColorModeSwitcher";
+import AccountMenu from "./AccountMenu";
 
 type HeaderProps = {
   children?: ReactNode;
@@ -12,12 +14,14 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ children }) => {
   const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
 
-  const handleCreateMapButtonClick = () => {
-    navigate("/map/my-map");
+  const handleLogout = async () => {
+    try {
+    } catch (error) {}
   };
 
-  const goToLoginPage = () => {
+  const moveToLoginPage = () => {
     navigate("/login");
   };
 
@@ -27,18 +31,16 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
         <Image boxSize="80px" objectFit="cover" alt="logo" src="/img/doge.png" />
       </ChakraLink>
       <Spacer />
-      <Box p="2">
-        <Heading fontSize="4xl" colorScheme="green">
-          아이거...
-        </Heading>
-      </Box>
-      <Spacer />
-      <ButtonGroup>
-        <Button onClick={handleCreateMapButtonClick}>내 퀴즈 목록</Button>
-        <Button colorScheme="green" onClick={goToLoginPage}>
-          로그인
-        </Button>
-      </ButtonGroup>
+      <Flex>
+        {/* <AccountMenu handleLogout={handleLogout} /> */}
+        {isLoggedIn ? (
+          <AccountMenu handleLogout={handleLogout} />
+        ) : (
+          <Button colorScheme="green" onClick={moveToLoginPage}>
+            로그인
+          </Button>
+        )}
+      </Flex>
       <ColorModeSwitcher />
       {children}
     </Flex>
