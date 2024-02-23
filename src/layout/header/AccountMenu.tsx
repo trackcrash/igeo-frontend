@@ -20,10 +20,9 @@ export default function AccountMenu({ handleLogout }: AccountMenuProps) {
     navigate("/map/my-map");
   };
 
-  const userProfileImg = localStorage.getItem("encodedProfileImg");
-  //   const userNickName = localStorage.getItem("encodedNickName");
-  const userNickName = "노예";
-  const userLevel = 1;
+  // const userProfileImg:string = localStorage.getItem("encodedProfileImg");
+  const userNickName = localStorage.getItem("userNickname");
+  const userLevel = localStorage.getItem("userLevel");
 
   return (
     <Flex alignItems={"center"}>
@@ -31,7 +30,7 @@ export default function AccountMenu({ handleLogout }: AccountMenuProps) {
         <MenuButton bg={"gray.700"} borderRadius={"0.25em"} border={"solid 0.1px"} minW={"180px"}>
           <Flex as={"header"} align={"center"} justify={"center"} p={"4"} cursor={"pointer"}>
             <Flex align={"center"}>
-              <Avatar size={"md"} name={userNickName} src="img/chino.jpg" />
+              <Avatar size={"md"} src="img/chino.jpg" />
               <Box m={"0 10px"}>
                 <Text fontWeight={"bold"}>{userNickName}</Text>
                 <Badge colorScheme={"green"}>Lv. {userLevel}</Badge>
