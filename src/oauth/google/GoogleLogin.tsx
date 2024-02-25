@@ -1,4 +1,4 @@
-import "oauth/css/LoginButton.css";
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
 
 interface googleLoginProps {
   onSuccess: () => void;
@@ -19,13 +19,24 @@ const GoogleLoginButton: React.FC<googleLoginProps> = ({ onSuccess }) => {
   const googleURL = `${BASE_URL}/login/google`;
 
   return (
-    <div className="oauth-login-btn-container" onClick={() => window.location.replace(googleURL)}>
-      <div>
-        <img className="oauth-login-btn" alt="구글 로그인" src="/img/GoogleLoginIcon.png" />
-        {/* 520 x 78 */}
-      </div>
-      <div className="oauth-login-text">구글 로그인</div>
-    </div>
+    <Box position={"relative"}>
+      <Flex justifyContent={"center"}>
+        <Flex cursor={"pointer"} onClick={() => window.location.replace(googleURL)}>
+          <Text
+            position={"absolute"}
+            top={"50%"}
+            left={"50%"}
+            transform={"translate(-50%, -50%)"}
+            color={"black"}
+            fontWeight={"bold"}
+            fontSize={"xl"}
+          >
+            구글 로그인
+          </Text>
+          <Image alt={"googleLogin"} src={"/img/GoogleLoginIcon.png"} />
+        </Flex>
+      </Flex>
+    </Box>
   );
 };
 
