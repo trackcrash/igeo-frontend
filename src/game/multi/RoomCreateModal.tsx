@@ -16,9 +16,9 @@ import {
   NumberInputField,
   NumberInputStepper,
   Stack,
-  useToast,
 } from "@chakra-ui/react";
 import { CreateRoom } from "../entity/CreateRoom";
+import useChakraToast from "utility/useChakraToast";
 
 interface ResetAlertDialogProps {
   cancelRef: React.RefObject<HTMLButtonElement>;
@@ -27,7 +27,7 @@ interface ResetAlertDialogProps {
 }
 
 const RoomCreateModal: React.FC<ResetAlertDialogProps> = ({ cancelRef, onClose, isOpen }) => {
-  const toast = useToast();
+  const toast = useChakraToast();
   const [roomName, setRoomName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [maxUser, setMaxUser] = useState<number>(8);
@@ -47,6 +47,10 @@ const RoomCreateModal: React.FC<ResetAlertDialogProps> = ({ cancelRef, onClose, 
   const handleCreateRoom = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
+      console.log("type: ", password === "" ? "public" : "private");
+      console.log("roomName: ", roomName);
+      console.log("password: ", password);
+      console.log("maxUser: ", maxUser);
       // const roomData: CreateRoom = {
       //   type: password.length > 0 ? "PRIVATE": "PUBLIC",
       //   roomName: roomName,
@@ -54,20 +58,14 @@ const RoomCreateModal: React.FC<ResetAlertDialogProps> = ({ cancelRef, onClose, 
       //   password: password,
       //   maxUser: maxUser,
       // };
+      onClose();
     } catch {
-      toast({
-        title: "방 생성 실패",
-        description: "방 생성 중 오류가 발생했습니다.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      toast({ title: "방 생성 실패", description: "방 생성 중 오류가 발생했습니다.", status: "error" });
     }
-    onClose();
   };
 
   return (
-    <AlertDialog motionPreset="slideInBottom" leastDestructiveRef={cancelRef} onClose={onClose} isOpen={isOpen} isCentered>
+    <AlertDialog closeOnOverlayClick={false} leastDestructiveRef={cancelRef} onClose={onClose} isOpen={isOpen} isCentered>
       <AlertDialogOverlay />
       <AlertDialogContent minH={"25em"}>
         <AlertDialogHeader>방 생성</AlertDialogHeader>

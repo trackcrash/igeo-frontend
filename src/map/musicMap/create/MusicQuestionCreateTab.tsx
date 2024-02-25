@@ -12,7 +12,6 @@ import {
   CardBody,
   Center,
   Image,
-  useToast,
   Stack,
 } from "@chakra-ui/react";
 import AddSongsModal from "./AddSongsModal";
@@ -22,9 +21,10 @@ import { useSongsListStore } from "map/store/SongsListStore";
 import { SongInfo } from "map/entity/SongInfo";
 import { useAddSongsModalStore } from "map/store/AddSongsModalStore";
 import { useMusicMapCreateStore } from "map/store/MusicMapCreateStore";
+import useChakraToast from "utility/useChakraToast";
 
 const MusicQuestionCreateTab: React.FC = () => {
-  const toast = useToast();
+  const toast = useChakraToast();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedSongId, setSelectedSongId] = useState<number | null>(null);
   const { resetState } = useAddSongsModalStore();
@@ -66,8 +66,6 @@ const MusicQuestionCreateTab: React.FC = () => {
       title: "썸네일 등록 완료",
       description: "선택한 곡이 썸네일로 표시됩니다.",
       status: "success",
-      duration: 5000,
-      isClosable: true,
     });
   };
 
@@ -77,8 +75,6 @@ const MusicQuestionCreateTab: React.FC = () => {
       title: "삭제 완료",
       description: "선택한 곡이 삭제되었습니다.",
       status: "success",
-      duration: 5000,
-      isClosable: true,
     });
   };
 
