@@ -28,10 +28,10 @@ import MapSelectPageMenu from "./MapSelectPageMenu";
 interface DummyOptions {
   missionId: number;
   mapType: string;
-  thumbnailId: string;
-  mapTitle: string;
-  mapDescription: string;
-  numberOfQustion: number;
+  thumbnail: string;
+  mapName: string;
+  description: string;
+  numberOfQuestion: number;
   isPublic: boolean;
 }
 
@@ -39,19 +39,19 @@ const dummyItems: MapInfo[] = [
   {
     missionId: 1,
     mapType: "MUSIC",
-    thumbnailId: "AjspnMNkGu8",
-    mapTitle: "대충 노래 맞히기 맵 샘플",
-    mapDescription: "대충 맵설명",
-    numberOfQustion: 50,
+    thumbnail: "AjspnMNkGu8",
+    mapName: "대충 노래 맞히기 맵 샘플",
+    description: "대충 맵설명",
+    numberOfQuestion: 50,
     isPublic: true,
   },
   {
     missionId: 2,
     mapType: "IMAGE",
-    thumbnailId: "PxF9hCmaBy4",
-    mapTitle: "대충 이미지 맞히기 맵 샘플",
-    mapDescription: "이거 줄 넘어가면 어떻게 되는거지 이거 줄 넘어가면 어떻게 되는거지",
-    numberOfQustion: 30,
+    thumbnail: "PxF9hCmaBy4",
+    mapName: "대충 이미지 맞히기 맵 샘플",
+    description: "이거 줄 넘어가면 어떻게 되는거지 이거 줄 넘어가면 어떻게 되는거지",
+    numberOfQuestion: 30,
     isPublic: false,
   },
 ];
@@ -60,14 +60,14 @@ const MapSelectPage = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const { mapInfo, setMapInfo } = useMapInfoStore();
-  const [selectedMapTitle, setSelectedMapTitle] = useState<string>();
+  const [selectedmapName, setSelectedmapName] = useState<string>();
   const [selectedMapId, setSelectedMapId] = useState<number>();
   const [confirmText, setConfirmText] = useState<string>("");
   const [isDeleteMapModalOpen, setIsDeleteMapModalOpen] = useState<boolean>(false);
   const { data: mapList, isLoading, isError } = useMyMapListQuery();
 
   const openDeleteMapModal = (title: string, missionId: number) => {
-    setSelectedMapTitle(title);
+    setSelectedmapName(title);
     setSelectedMapId(missionId);
     setIsDeleteMapModalOpen(true);
   };
@@ -92,7 +92,7 @@ const MapSelectPage = () => {
   };
 
   const handleMapDelete = () => {
-    console.log("맵제목", selectedMapTitle);
+    console.log("맵제목", selectedmapName);
     console.log(selectedMapId, "번 맵 삭제");
   };
 
@@ -140,8 +140,8 @@ const MapSelectPage = () => {
                   _hover={{ transform: "scale(1.02)", transition: "transform 0.3s" }}
                 >
                   <Image
-                    src={`https://img.youtube.com/vi/${map.thumbnailId}/hqdefault.jpg`}
-                    alt={`${map.thumbnailId}`}
+                    src={`https://img.youtube.com/vi/${map.thumbnail}/hqdefault.jpg`}
+                    alt={`${map.thumbnail}`}
                     borderTopRadius="md"
                     objectFit="cover"
                     w="100%"
@@ -149,15 +149,15 @@ const MapSelectPage = () => {
                   />
                   <Box p={4}>
                     <Center>
-                      <Tooltip label={map.mapTitle}>
+                      <Tooltip label={map.mapName}>
                         <Text overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis" as={"b"} fontSize={"xl"} mb={2}>
-                          {map.mapTitle}
+                          {map.mapName}
                         </Text>
                       </Tooltip>
                     </Center>
-                    <Tooltip label={map.mapDescription}>
+                    <Tooltip label={map.description}>
                       <Text overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis" fontSize={"sm"} mb={4}>
-                        {map.mapDescription}
+                        {map.description}
                       </Text>
                     </Tooltip>
                     <HStack spacing={4} justifyContent={"space-between"}>
@@ -175,7 +175,7 @@ const MapSelectPage = () => {
                         )}
                         <Tag variant="outline" colorScheme="blue">
                           <TagLeftIcon as={RiMusic2Fill} />
-                          <TagLabel>{map.numberOfQustion}</TagLabel>
+                          <TagLabel>{map.numberOfQuestion}</TagLabel>
                         </Tag>
                       </Flex>
                       <Flex gap={1}>
@@ -193,7 +193,7 @@ const MapSelectPage = () => {
                           <Tag
                             onClick={(e) => {
                               e.stopPropagation();
-                              openDeleteMapModal(map.mapTitle, map.missionId);
+                              openDeleteMapModal(map.mapName, map.missionId);
                             }}
                           >
                             <FiTrash2 />
@@ -213,7 +213,7 @@ const MapSelectPage = () => {
         onClose={closeDeleteMapModal}
         handleMapDelete={handleMapDelete}
         confirmText={confirmText}
-        selectedMapTitle={selectedMapTitle}
+        selectedmapName={selectedmapName}
         setConfirmText={setConfirmText}
       />
     </Box>

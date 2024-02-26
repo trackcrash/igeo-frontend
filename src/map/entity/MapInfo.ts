@@ -1,9 +1,9 @@
 export type MapInfo = {
   missionId: number;
   mapType: string;
-  thumbnailId: string;
-  mapTitle: string;
-  mapDescription: string;
-  numberOfQustion: number;
+  thumbnail: string;
+  mapName: string;
+  description: string;
+  numberOfQuestion: number;
   isPublic: boolean;
 };

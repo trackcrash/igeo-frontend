@@ -1,8 +1,8 @@
 export type MusicMapRequestForm = {
   id: string;
-  MapName: string;
+  mapName: string;
   MapProducer: string;
-  Thumbnail: string;
+  thumbnail: string;
   active: boolean;
   PlayNum: number;
   Description: string;

@@ -6,7 +6,7 @@ import { MusicMapRequestForm } from "map/entity/request/MusicMapRequestForm";
 import { UseQueryResult, useQuery } from "react-query";
 import { useMapInfoStore } from "../store/MapInfoStore";
 
-const userToken = localStorage.getItem("userToken")!;
+let userToken = localStorage.getItem("token")?.trim();
 
 export const updateMapInfo = async (updatedInfo: MapInfo[]) => {
   await axiosInstance.post<MapInfo[]>("/api", {
@@ -36,9 +36,12 @@ export const registerMusicMap = async (data: MusicMapRequestForm): Promise<boole
 };
 
 const getMyMapList = async (): Promise<MapInfo[]> => {
-  const response = await axiosInstance.get<MapInfo[]>("/api", {
-    params: { userToken: userToken },
+  const response = await axiosInstance.get<MapInfo[]>("/api/mission/owned", {
+    headers: {
+      Authorization: `Bearer ${userToken}`,
+    }
   });
+
   console.log("map list data: ", response.data);
   return response.data;
 };

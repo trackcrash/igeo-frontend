@@ -1,31 +1,31 @@
 import { create } from "zustand";
 
 interface MusicMapCreateState {
-  thumbnailId: string;
-  mapTitle: string;
-  mapDescription: string;
-  numberOfQustion: number;
+  thumbnail: string;
+  mapName: string;
+  description: string;
+  numberOfQuestion: number;
   genre: string;
   isPublic: boolean;
-  setThumbnailId: (thumbnailId: string) => void;
-  setMapTitle: (mapTitle: string) => void;
-  setMapDescription: (mapDescription: string) => void;
-  setNumberOfQustion: (numberOfQustion: number) => void;
+  setthumbnail: (thumbnail: string) => void;
+  setmapName: (mapName: string) => void;
+  setdescription: (description: string) => void;
+  setnumberOfQuestion: (numberOfQuestion: number) => void;
   setGenre: (genre: string) => void;
   setIsPublic: (isPublic: boolean) => void;
 }
 
 export const useMusicMapCreateStore = create<MusicMapCreateState>((set) => ({
-  thumbnailId: "",
-  mapTitle: "맵 제목을 입력해주세요",
-  mapDescription: "맵 설명을 입력해주세요",
-  numberOfQustion: 0,
+  thumbnail: "",
+  mapName: "맵 제목을 입력해주세요",
+  description: "맵 설명을 입력해주세요",
+  numberOfQuestion: 0,
   genre: "장르를 입력해주세요",
   isPublic: false,
-  setThumbnailId: (thumbnailId) => set({ thumbnailId }),
-  setMapTitle: (mapTitle) => set({ mapTitle }),
-  setMapDescription: (mapDescription) => set({ mapDescription }),
-  setNumberOfQustion: (numberOfQustion) => set({ numberOfQustion }),
+  setthumbnail: (thumbnail) => set({ thumbnail }),
+  setmapName: (mapName) => set({ mapName }),
+  setdescription: (description) => set({ description }),
+  setnumberOfQuestion: (numberOfQuestion) => set({ numberOfQuestion }),
   setGenre: (genre) => set({ genre }),
   setIsPublic: (isPublic) => set({ isPublic }),
 }));

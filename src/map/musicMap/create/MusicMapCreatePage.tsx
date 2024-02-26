@@ -9,7 +9,7 @@ import { registerMusicMap } from "map/api/mapApi";
 
 const MusicMapCreatePage: React.FC = () => {
   const { songs } = useSongsListStore();
-  const { thumbnailId, mapTitle, mapDescription, numberOfQustion, genre, isPublic } = useMusicMapCreateStore();
+  const { thumbnail, mapName, description, numberOfQuestion, genre, isPublic } = useMusicMapCreateStore();
 
   const handleSaveMap = async () => {
     const parsedMusicInfo: MusicInfo[] = songs.map((song) => ({
@@ -25,11 +25,11 @@ const MusicMapCreatePage: React.FC = () => {
     }));
 
     const musicMapRequestData: Omit<MusicMapRequestForm, "MapProducer" | "id" | "user_id"> & { genre: string } = {
-      MapName: mapTitle,
-      Thumbnail: thumbnailId,
+      mapName: mapName,
+      thumbnail: thumbnail,
       active: isPublic,
-      PlayNum: numberOfQustion,
-      Description: mapDescription,
+      PlayNum: numberOfQuestion,
+      Description: description,
       genre: genre,
       musics: parsedMusicInfo,
     };

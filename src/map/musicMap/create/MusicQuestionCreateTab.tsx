@@ -28,7 +28,7 @@ const MusicQuestionCreateTab: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedSongId, setSelectedSongId] = useState<number | null>(null);
   const { resetState } = useAddSongsModalStore();
-  const { thumbnailId, setThumbnailId } = useMusicMapCreateStore();
+  const { thumbnail, setthumbnail } = useMusicMapCreateStore();
   const { songs, removeSong } = useSongsListStore();
   const [hoveredStar, setHoveredStar] = useState<boolean[]>(Array(songs.length).fill(false));
   const [hoveredTrash, setHoveredTrash] = useState<boolean[]>(Array(songs.length).fill(false));
@@ -44,7 +44,7 @@ const MusicQuestionCreateTab: React.FC = () => {
 
   useEffect(() => {
     if (songs.length > 0) {
-      setThumbnailId(songs[0].youtubeId);
+      setthumbnail(songs[0].youtubeId);
     }
   }, [songs]);
 
@@ -60,8 +60,8 @@ const MusicQuestionCreateTab: React.FC = () => {
     setHoveredTrash(updatedHoveredTrash);
   };
 
-  const handleSetThumbnail = (youtubeId: string) => {
-    setThumbnailId(youtubeId);
+  const handleSetthumbnail = (youtubeId: string) => {
+    setthumbnail(youtubeId);
     toast({
       title: "썸네일 등록 완료",
       description: "선택한 곡이 썸네일로 표시됩니다.",
@@ -115,13 +115,13 @@ const MusicQuestionCreateTab: React.FC = () => {
                     borderRadius: "10em",
                     border: "1px solid white",
                     padding: "3px",
-                    color: hoveredStar[idx] || song.youtubeId === thumbnailId ? "yellow" : "white",
+                    color: hoveredStar[idx] || song.youtubeId === thumbnail ? "yellow" : "white",
                     transform: hoveredStar[idx] ? "rotateY(180deg)" : "rotate(0)",
                     transition: "transform 0.3s",
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSetThumbnail(song.youtubeId);
+                    handleSetthumbnail(song.youtubeId);
                   }}
                 />
                 <FiTrash2

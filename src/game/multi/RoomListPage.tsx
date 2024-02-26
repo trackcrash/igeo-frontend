@@ -71,8 +71,8 @@ const RoomListPage: React.FC<RoomListProps> = ({ roomList, isError, isLoading })
             _hover={{ transform: "scale(1.02)", transition: "transform 0.3s" }}
           >
             <Image
-              src={`https://img.youtube.com/vi/${room.thumbnailId}/hqdefault.jpg`}
-              alt={`${room.thumbnailId}`}
+              src={`https://img.youtube.com/vi/${room.thumbnail}/hqdefault.jpg`}
+              alt={`${room.thumbnail}`}
               borderTopRadius="md"
               objectFit="cover"
               w="100%"
@@ -100,7 +100,7 @@ const RoomListPage: React.FC<RoomListProps> = ({ roomList, isError, isLoading })
                 </Text>
               </Center>
               <Text overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis" fontSize={"sm"} mb={4}>
-                {`맵 이름 : ${room.mapTitle}`}
+                {`맵 이름 : ${room.mapName}`}
               </Text>
               <HStack spacing={4} justifyContent={"space-between"}>
                 <Flex gap={3}>
@@ -117,7 +117,7 @@ const RoomListPage: React.FC<RoomListProps> = ({ roomList, isError, isLoading })
                   )}
                   <Tag variant="outline" colorScheme="blue">
                     <TagLeftIcon as={RiMusic2Fill} />
-                    <TagLabel>{room.numberOfQustion}</TagLabel>
+                    <TagLabel>{room.numberOfQuestion}</TagLabel>
                   </Tag>
                 </Flex>
                 <Flex gap={1}>

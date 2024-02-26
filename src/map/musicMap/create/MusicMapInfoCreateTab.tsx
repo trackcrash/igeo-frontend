@@ -25,20 +25,20 @@ import { useMusicMapCreateStore } from "map/store/MusicMapCreateStore";
 import { useSongsListStore } from "map/store/SongsListStore";
 
 const MusicMapInfoCreateTab: React.FC = () => {
-  const { thumbnailId, mapTitle, mapDescription, genre, isPublic, setMapTitle, setMapDescription, setNumberOfQustion, setGenre, setIsPublic } =
+  const { thumbnail, mapName, description, genre, isPublic, setmapName, setdescription, setnumberOfQuestion, setGenre, setIsPublic } =
     useMusicMapCreateStore();
   const { songs } = useSongsListStore();
 
   useEffect(() => {
-    setNumberOfQustion(songs.length);
+    setnumberOfQuestion(songs.length);
   }, [songs]);
 
-  const handleMapTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMapTitle(e.target.value);
+  const handlemapNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setmapName(e.target.value);
   };
 
-  const handleMapDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMapDescription(e.target.value);
+  const handledescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setdescription(e.target.value);
   };
 
   const handleGenreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,18 +52,18 @@ const MusicMapInfoCreateTab: React.FC = () => {
   return (
     <SimpleGrid m={"0 auto"} maxW={"1000px"} columns={{ base: 1, sm: 2, md: 2 }} spacing={4}>
       <Box borderRadius="lg" overflow="hidden" boxShadow="md" border="1px solid #bbbbbb">
-        <Image src={`https://img.youtube.com/vi/${thumbnailId}/hqdefault.jpg`} borderTopRadius="md" objectFit="cover" w="100%" h="200px" />
+        <Image src={`https://img.youtube.com/vi/${thumbnail}/hqdefault.jpg`} borderTopRadius="md" objectFit="cover" w="100%" h="200px" />
         <Box p={4}>
           <Center>
-            <Tooltip label={`${mapTitle}`}>
+            <Tooltip label={`${mapName}`}>
               <Text overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis" as={"b"} fontSize={"xl"} mb={2}>
-                {mapTitle}
+                {mapName}
               </Text>
             </Tooltip>
           </Center>
-          <Tooltip label={`${mapDescription}`}>
+          <Tooltip label={`${description}`}>
             <Text overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis" fontSize={"sm"} mb={4}>
-              {mapDescription}
+              {description}
             </Text>
           </Tooltip>
           <HStack spacing={4} justifyContent={"space-between"}>
@@ -86,11 +86,11 @@ const MusicMapInfoCreateTab: React.FC = () => {
       <Stack spacing={4}>
         <InputGroup>
           <InputLeftAddon minWidth={"85px"}>맵 제목</InputLeftAddon>
-          <Input onChange={handleMapTitleChange} />
+          <Input onChange={handlemapNameChange} />
         </InputGroup>
         <InputGroup>
           <InputLeftAddon minWidth={"85px"}>맵 설명</InputLeftAddon>
-          <Input onChange={handleMapDescriptionChange} />
+          <Input onChange={handledescriptionChange} />
         </InputGroup>
         <InputGroup>
           <InputLeftAddon minWidth={"85px"}>장르</InputLeftAddon>

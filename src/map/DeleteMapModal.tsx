@@ -18,11 +18,11 @@ interface DeleteMapModalProps {
   onClose: () => void;
   handleMapDelete: () => void;
   confirmText: string;
-  selectedMapTitle: string | undefined;
+  selectedmapName: string | undefined;
   setConfirmText: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const DeleteMapModal: React.FC<DeleteMapModalProps> = ({ isOpen, onClose, handleMapDelete, confirmText, selectedMapTitle, setConfirmText }) => {
+const DeleteMapModal: React.FC<DeleteMapModalProps> = ({ isOpen, onClose, handleMapDelete, confirmText, selectedmapName, setConfirmText }) => {
   return (
     <Modal isCentered closeOnOverlayClick={false} size={"xl"} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -42,13 +42,13 @@ const DeleteMapModal: React.FC<DeleteMapModalProps> = ({ isOpen, onClose, handle
           </Center>
           <br />
           <Text mb={2}>
-            <Highlight query={`${selectedMapTitle}`} styles={{ px: "2", py: "1", rounded: "full", bg: "red.100", fontWeight: "bold" }}>
-              {selectedMapTitle!}
+            <Highlight query={`${selectedmapName}`} styles={{ px: "2", py: "1", rounded: "full", bg: "red.100", fontWeight: "bold" }}>
+              {selectedmapName!}
             </Highlight>
           </Text>
-          <Input placeholder={`${selectedMapTitle}`} onChange={(e) => setConfirmText(e.target.value)} />
+          <Input placeholder={`${selectedmapName}`} onChange={(e) => setConfirmText(e.target.value)} />
         </ModalBody>
-        <Button colorScheme="red" onClick={handleMapDelete} isDisabled={confirmText !== selectedMapTitle}>
+        <Button colorScheme="red" onClick={handleMapDelete} isDisabled={confirmText !== selectedmapName}>
           삭제
         </Button>
       </ModalContent>
