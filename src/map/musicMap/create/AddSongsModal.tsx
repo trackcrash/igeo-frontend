@@ -1,11 +1,12 @@
 import React, { useRef } from "react";
-import { Flex, Button, Divider, useDisclosure, useToast } from "@chakra-ui/react";
+import { Flex, Button, Divider, useDisclosure } from "@chakra-ui/react";
 import YoutubeControllerContainer from "./YoutubeControllerContainer";
 import MusicInfoContainer from "./MusicInfoContainer";
 import AnswerContainer from "./AnswerContainer";
 import ResetAlertDialog from "./ResetAlertDialog";
 import { useAddSongsModalStore } from "map/store/AddSongsModalStore";
 import { useSongsListStore } from "map/store/SongsListStore";
+import useChakraToast from "utility/useChakraToast";
 
 import "map/css/AddSongsModal.css";
 
@@ -18,7 +19,7 @@ type AddSongsModalProps = SelectedSongIdProps & {
 };
 
 const AddSongsModal: React.FC<AddSongsModalProps> = ({ selectedSongId, onModalClose }) => {
-  const toast = useToast();
+  const toast = useChakraToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const { categories, answersList, setCategories, setAnswersList, resetState } = useAddSongsModalStore();
@@ -62,16 +63,12 @@ const AddSongsModal: React.FC<AddSongsModalProps> = ({ selectedSongId, onModalCl
         title: "저장 완료",
         description: "입력하신 내용이 저장되었습니다.",
         status: "success",
-        duration: 5000,
-        isClosable: true,
       });
     } catch {
       toast({
         title: "저장 실패",
         description: "노래 정보 저장 중 오류가 발생했습니다.",
         status: "error",
-        duration: 5000,
-        isClosable: true,
       });
     }
     onModalClose();
@@ -86,16 +83,12 @@ const AddSongsModal: React.FC<AddSongsModalProps> = ({ selectedSongId, onModalCl
         title: "초기화 완료",
         description: "입력하신 내용이 초기화되었습니다.",
         status: "success",
-        duration: 5000,
-        isClosable: true,
       });
     } catch {
       toast({
         title: "초기화 실패",
         description: "초기화 중 오류가 발생했습니다.",
         status: "error",
-        duration: 5000,
-        isClosable: true,
       });
     }
   };

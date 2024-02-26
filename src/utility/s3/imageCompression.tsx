@@ -1,8 +1,8 @@
 import imageCompression from "browser-image-compression";
-import { useToast } from "@chakra-ui/react";
+import useChakraToast from "../useChakraToast";
 
 export const compressImg = async (image: File) => {
-  const toast = useToast();
+  const toast = useChakraToast();
   try {
     const options = {
       maxSizeMB: 1,
@@ -12,7 +12,6 @@ export const compressImg = async (image: File) => {
     toast({
       title: "이미지 파일을 업로드해주세요!",
       status: "error",
-      isClosable: true,
     });
     // alert("이미지 파일을 업로드해주세요!");
     console.log(e);

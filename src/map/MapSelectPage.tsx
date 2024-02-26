@@ -11,7 +11,6 @@ import {
   TagLeftIcon,
   Text,
   Tooltip,
-  useToast,
   Skeleton,
   SkeletonCircle,
   SkeletonText,
@@ -57,7 +56,6 @@ const dummyItems: MapInfo[] = [
 ];
 
 const MapSelectPage = () => {
-  const toast = useToast();
   const navigate = useNavigate();
   const { mapInfo, setMapInfo } = useMapInfoStore();
   const [selectedmapName, setSelectedmapName] = useState<string>();

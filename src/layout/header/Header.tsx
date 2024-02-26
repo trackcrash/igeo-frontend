@@ -1,19 +1,20 @@
 import React, { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link as ReactRouterLink } from "react-router-dom";
-import { Link as ChakraLink, Spacer, useToast } from "@chakra-ui/react";
+import { Link as ChakraLink, Spacer } from "@chakra-ui/react";
 import { Button, Flex, Image } from "@chakra-ui/react";
 import { useAuth } from "./AuthConText";
 import AccountMenu from "./AccountMenu";
 import { AxiosError } from "axios";
 import { ColorModeSwitcher } from "ColorModeSwitcher";
+import useChakraToast from "utility/useChakraToast";
 
 type HeaderProps = {
   children?: ReactNode;
 };
 
 const Header: React.FC<HeaderProps> = ({ children }) => {
-  const toast = useToast();
+  const toast = useChakraToast();
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useAuth();
 
@@ -33,8 +34,6 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
       toast({
         title: "로그아웃했습니다.",
         status: "success",
-        duration: 5000,
-        isClosable: true,
       });
       window.location.href = "/";
     } catch (error) {
@@ -42,15 +41,11 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
         toast({
           title: "페이지를 찾을 수 없습니다.",
           status: "error",
-          duration: 5000,
-          isClosable: true,
         });
       } else {
         toast({
           title: "서버와 통신 중 오류가 발생했습니다.",
           status: "error",
-          duration: 5000,
-          isClosable: true,
         });
       }
     }
